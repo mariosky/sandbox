@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tester</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/static/css/sticky-footer-navbar.css" rel="stylesheet">
+
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+
+   <style type="text/css" media="screen">
+    #editor {
+
+        height: 250px;
+
+    }
+    </style>
+
+
+ <script  type="text/javascript" charset="utf-8">
+
+
+  $(document).ready(function() {
+
+
+     $("#send_btn").on("click", function (){
+           var code = editor.getValue();
+
+           alert(code);
+           $.ajax(
+                {
+                    url: $SCRIPT_ROOT + '/_execute',
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({"jsonrpc": "2.0", "method": "_execute", "params": [code], "id": 1 }),
+                    dataType: "json",
+                    success: function(data, textStatus, jqXHR) {
+
+
+                        $("#info_panel_body").html("");
+
+                        var info_list = data.result[0];
+                        for (var i=0; i<info_list.length; i++){
+                         $('<p>'+ info_list[i]+'<p/>', {class:"p"}).appendTo("#info_panel_body");
+                        }
+
+
+
+                     },
+                    error: function(jqXHR, textStatus, errorThrown)  {
+                        alert ("Error:" + textStatus+" "+errorThrown+" "+jqXHR.responseText);}
+                });
+
+
+     });
+  });
+
+</script>
+
+</head>
+
+<body>
+
+
+
+<!-- Wrap all page content here -->
+    <div id="wrap">
+      <!-- Begin page content -->
+        <div class="container">
+              <h3> Suma dos números</h3>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Editor</h3>
+
+                </div>
+
+                <div class="panel-body">
+<div id="editor">
+# Funcion que regresa la suma de dos numeros
+
+def suma(a,b):
+    return a+b
+</div>
+                </div>
+            </div>
+
+<button id="send_btn" type="button"  class="btn btn-primary"> Enviar </button>
+
+            <div id="info_panel" class="panel panel-default">
+                <div id="info_panel_heading" class="panel-heading">
+                    <h3 class="panel-title">Instrucciones</h3>
+                </div>
+
+                <div id="info_panel_body" class="panel-body">
+             <div>
+<code>    # Funcion que regresa la suma de dos numeros
+def suma(a,b):
+    return a+b
+</code>
+</div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+    <div id="footer">
+      <div class="container">
+        <p class="text-muted credit"> Parte del proyecto <a href="http://www.protoboard.org">protoboard.org</a> </p>
+      </div>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script src="/static/src/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/src/theme-chrome.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/src/mode-python.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        editor = ace.edit("editor");
+        editor.setTheme("ace/theme/chrome");
+        editor.getSession().setMode("ace/mode/python");
+
+    </script>
+
+
+</body>
+</html>
