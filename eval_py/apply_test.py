@@ -1,21 +1,26 @@
 __author__ = 'mariosky'
 
+
+# Based on: http://readevalprint.github.com/blog/python-sandbox-with-pypy-part2.html
+
+
+
 import shutil, os, tempfile
 import subprocess
 
-TIMEOUT = 5
+
 
 def exec_sandbox(code, test):
     try:
         code = code + test
         tmp_dir = tempfile.mkdtemp()
-        tmp_script = open(os.path.join(tmp_dir, "script.py"),'w') # script.py is the name of the code passed in
+        tmp_script = open(os.path.join(tmp_dir, "script.py"),'w')
         tmp_script.write(code)
         tmp_script.close()
         script_path = os.path.join(tmp_dir, "script.py")
         result = [],""
         try:
-            out = subprocess.check_output(['python',script_path, '--timeout',str(TIMEOUT)], stderr=subprocess.STDOUT)
+            out = subprocess.check_output(['python',script_path], stderr=subprocess.STDOUT)
             result = (output_as_list(out),0)
 
         except subprocess.CalledProcessError , e:
