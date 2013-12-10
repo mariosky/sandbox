@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify ,json
 
 from eval_py.apply_test import exec_sandbox
+from eval_py.Redis_Cola import Cola
 import docker
 import requests
 
@@ -23,25 +24,6 @@ def execute():
     return jsonify(result=out)
 
 
-def execute_sandboxed():
-
-    dC = docker.Client(base_url='unix://var/run/docker.sock', version="1.6", timeout=60)
-    rpc = request.json
-    code = rpc["params"][0]
-    data = {"jsonrpc": "2.0", "method": "_execute", "params": [code], "id": 1 }
-
-    cont = make_container()
-    print cont
-    start(cont)
-    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-
-    port = dC.inspect_container(cont)['NetworkSettings']['Ports']['5000/tcp'][0]['HostPort']
-    print port
-
-    url = "http://localhost:%d/_execute" % (port)
-
-    r = requests.post(url, data=json.dumps(data), headers=headers)
-    return r.json()
 
 @app.route('/_execute_sandboxed', methods=['POST'])
 def execute_sand(code=None):
@@ -58,10 +40,20 @@ def execute_sand(code=None):
     while dC.logs(cont) == "":
         print "waiting..."
 
-
     r = requests.post(url, data=json.dumps(data), headers=headers)
     print r.json()
     return jsonify(r.json())
+
+
+@app.route('/_execute_queue', methods=['POST'])
+def _execute_queue(code=None):
+    server = Cola("curso")
+    server.initialize()
+    rpc = request.json
+    code = rpc["params"][0]
+    task = {"id": None,"method": "exec","params": {"code": code}}
+    server.enqueue(**task)
+    return jsonify({"result":"added" , "error": None, "id": id})
 
 
 test = '''
