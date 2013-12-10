@@ -23,38 +23,41 @@ def execute():
     return jsonify(result=out)
 
 
-@app.route('/_execute_sandboxed', methods=['POST'])
 def execute_sandboxed():
+
     dC = docker.Client(base_url='unix://var/run/docker.sock', version="1.6", timeout=60)
     rpc = request.json
     code = rpc["params"][0]
     data = {"jsonrpc": "2.0", "method": "_execute", "params": [code], "id": 1 }
 
     cont = make_container()
+    print cont
     start(cont)
-
-
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
     port = dC.inspect_container(cont)['NetworkSettings']['Ports']['5000/tcp'][0]['HostPort']
+    print port
+
     url = "http://localhost:%d/_execute" % (port)
 
     r = requests.post(url, data=json.dumps(data), headers=headers)
     return r.json()
 
-
+@app.route('/_execute_sandboxed', methods=['POST'])
 def execute_sand(code):
     dC = docker.Client(base_url='unix://var/run/docker.sock', version="1.6", timeout=60)
+    rpc = request.json
+    code = rpc["params"][0]
+
     data = {"jsonrpc": "2.0", "method": "_execute", "params": [code], "id": 1 }
     cont = make_container()
     start(cont)
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     port = dC.inspect_container(cont)['NetworkSettings']['Ports']['5000/tcp'][0]['HostPort']
     url = "http://127.0.0.1:%s/_execute" % (port)
-    while dC.logs(cont) == "" :
-        pass
+    while dC.logs(cont) == "":
+        print "waiting..."
     r = requests.post(url, data=json.dumps(data), headers=headers)
-    print dC.logs(cont)
     return r.json()
 
 
