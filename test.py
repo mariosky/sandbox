@@ -48,12 +48,13 @@ def execute_sand(code=None):
 @app.route('/_execute_queue', methods=['POST'])
 def _execute_queue(code=None):
     server = Cola("curso")
-    server.initialize()
+    #server.initialize()
     rpc = request.json
     code = rpc["params"][0]
     task = {"id": None,"method": "exec","params": {"code": code}}
     server.enqueue(**task)
-    return jsonify({"result":"added" , "error": None, "id": id})
+    result=json.loads({"result":"added" , "error": None, "id": id})
+    return jsonify(result)
 
 
 test = '''
