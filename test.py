@@ -44,7 +44,7 @@ def execute_sandboxed():
     return r.json()
 
 @app.route('/_execute_sandboxed', methods=['POST'])
-def execute_sand(code):
+def execute_sand(code=None):
     dC = docker.Client(base_url='unix://var/run/docker.sock', version="1.6", timeout=60)
     rpc = request.json
     code = rpc["params"][0]
