@@ -60,8 +60,8 @@ def execute_sand(code=None):
 
 
     r = requests.post(url, data=json.dumps(data), headers=headers)
-    print r
-    return r.json()
+    print r.json()
+    return jsonify(r.json())
 
 
 test = '''
