@@ -36,7 +36,7 @@ def execute_sandboxed():
 
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
-    port = dC.inspect_container(c)['NetworkSettings']['Ports']['5000/tcp'][0]['HostPort']
+    port = dC.inspect_container(cont)['NetworkSettings']['Ports']['5000/tcp'][0]['HostPort']
     url = "http://localhost:%d/_execute" % (port)
 
     r = requests.post(url, data=json.dumps(data), headers=headers)
