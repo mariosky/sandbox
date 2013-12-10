@@ -63,6 +63,37 @@
 
 
      });
+
+     $("#send_btn").on("click", function (){
+           var code = editor.getValue();
+
+           alert(code);
+           $.ajax(
+                {
+                    url: $SCRIPT_ROOT + '/_execute_sandboxed',
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({"jsonrpc": "2.0", "method": "_execute", "params": [code], "id": 1 }),
+                    dataType: "json",
+                    success: function(data, textStatus, jqXHR) {
+
+
+                        $("#info_panel_body").html("");
+
+                        var info_list = data.result[0];
+                        for (var i=0; i<info_list.length; i++){
+                         $('<p>'+ info_list[i]+'<p/>', {class:"p"}).appendTo("#info_panel_body");
+                        }
+
+
+
+                     },
+                    error: function(jqXHR, textStatus, errorThrown)  {
+                        alert ("Error:" + textStatus+" "+errorThrown+" "+jqXHR.responseText);}
+                });
+
+
+     });
   });
 
 </script>
@@ -95,6 +126,8 @@ def suma(a,b):
             </div>
 
 <button id="send_btn" type="button"  class="btn btn-primary"> Enviar </button>
+<button id="send_btn_docker" type="button"  class="btn btn-primary"> Enviar a Docker </button>
+<button id="send_btn_queue" type="button"  class="btn btn-primary"> Enviar a Queue</button>
 
             <div id="info_panel" class="panel panel-default">
                 <div id="info_panel_heading" class="panel-heading">
