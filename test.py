@@ -62,13 +62,13 @@ def _execute_queue(code=None):
 @app.route('/_get_result',methods=['POST'])
 def get_result():
     rpc = request.json
-    print rpc
-    task_id = rpc["task_id"]
-    print task_id
+    print 'rpc' , rpc
+    task_id = rpc["id"]
+    print 'id', task_id
     t = Task(task_id)
-    print t
+    print 't',t
     t.get_result('cola')
-    print t.result
+    print 't.result', t.result
     return jsonify(t.result)
 
 
