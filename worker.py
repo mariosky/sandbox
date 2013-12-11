@@ -57,7 +57,8 @@ while True:
 
     if (t):
         code = t.params['code']
-        out = exec_sandbox(code,test)
+
+        t.result = exec_sandbox(code,test)
         #t.result = suma(**t.params)
         #print time.sleep(10)
         t.put_result(worker)
