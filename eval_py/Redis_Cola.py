@@ -13,10 +13,10 @@ r = redis.Redis(host=HOST, port=PORT)
 class Task:
     def __init__(self, **kwargs):
         self.id = kwargs['id']
-        self.method = kwargs['method']
+        self.method =  kwargs.get(kwargs['method'], None)
         self.params = kwargs.get('params', {})
         self.state = kwargs.get('state', 'created')
-        self.expire = kwargs.get('expire', 'None')
+        self.expire = kwargs.get('expire', None)
         self.result = None
         self.__dict__.update(kwargs)
 
