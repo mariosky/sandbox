@@ -112,6 +112,7 @@
                     dataType: "json",
                     success: function(data, textStatus, jqXHR) {
 
+                            alert(data);
 
                         $("#info_panel_body").html("");
 
@@ -137,7 +138,7 @@
                     url: $SCRIPT_ROOT + '/_get_result',
                     type: "POST",
                     contentType: "application/json",
-                    data: JSON.stringify({"jsonrpc": "2.0", "method": "_execute", "params": [code], "id": 1 }),
+                    data: JSON.stringify({"jsonrpc": "2.0", "method": "_execute", "params": [null], "id": task_id }),
                     dataType: "json",
                     success: function(data, textStatus, jqXHR) {
 
