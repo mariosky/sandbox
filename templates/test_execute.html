@@ -36,9 +36,8 @@
      $("#send_btn").on("click", function (){
            var code = editor.getValue();
 
-               <!--
-              alert(code);
-             -->
+               //alert(code);
+             
          $.ajax(
                 {
                     url: $SCRIPT_ROOT + '/_execute',
@@ -69,9 +68,8 @@
      $("#send_btn_docker").on("click", function (){
            var code = editor.getValue();
 
-              <!--
-              alert(code);
-             -->
+          //   alert(code);
+
            $.ajax(
                 {
                     url: $SCRIPT_ROOT + '/_execute_sandboxed',
@@ -101,9 +99,8 @@
 
      $("#send_btn_queue").on("click", function (){
            var code = editor.getValue();
-            <!--
-              alert(code);
-             -->
+
+           //   alert(code);
 
            $.ajax(
                 {
