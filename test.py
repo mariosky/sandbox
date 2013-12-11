@@ -65,7 +65,7 @@ def get_result():
     print 'rpc' , rpc
     task_id = rpc["id"]
     print 'id', task_id
-    t = Task(task_id)
+    t = Task(id=task_id)
     print 't',t
     t.get_result('cola')
     print 't.result', t.result
