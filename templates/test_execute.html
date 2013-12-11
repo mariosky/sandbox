@@ -32,6 +32,7 @@
 
   $(document).ready(function() {
 
+      task_id = 0;
 
      $("#send_btn").on("click", function (){
            var code = editor.getValue();
@@ -125,6 +126,36 @@
 
 
      });
+
+       $("#send_btn_result").on("click", function (){
+           var code = editor.getValue();
+
+           //   alert(code);
+
+           $.ajax(
+                {
+                    url: $SCRIPT_ROOT + '/_get_result',
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({"jsonrpc": "2.0", "method": "_execute", "params": [code], "id": 1 }),
+                    dataType: "json",
+                    success: function(data, textStatus, jqXHR) {
+
+                        alert(data.result[0]);
+
+                        $("#info_panel_body").html("");
+
+                         $('<p>'+ 'En proceso...'+'<p/>', {class:"p"}).appendTo("#info_panel_body");
+
+
+
+                     },
+                    error: function(jqXHR, textStatus, errorThrown)  {
+                        alert ("Error:" + textStatus+" "+errorThrown+" "+jqXHR.responseText);}
+                });
+
+
+     });
   });
 
 </script>
@@ -159,6 +190,7 @@ def suma(a,b):
 <button id="send_btn" type="button"  class="btn btn-primary"> Enviar </button>
 <button id="send_btn_docker" type="button"  class="btn btn-primary"> Enviar a Docker </button>
 <button id="send_btn_queue" type="button"  class="btn btn-primary"> Enviar a Queue</button>
+<button id="send_btn_result" type="button"  class="btn btn-primary"> Get Result</button>
 
             <div id="info_panel" class="panel panel-default">
                 <div id="info_panel_heading" class="panel-heading">

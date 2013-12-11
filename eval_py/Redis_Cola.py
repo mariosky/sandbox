@@ -41,7 +41,6 @@ class Task:
         else:
             return None
 
-
     def get_result(self, app_name, as_dict = False):
         if r.sismember('%s:result_set' % app_name, self.id):
             _dict = eval(r.get(self.id))
@@ -79,6 +78,7 @@ class Cola:
             kwargs['id'] = "%s:task:%s" % (self.app_name, r.incr(self.task_counter))
         t = Task(**kwargs)
         t.enqueue(self.app_name)
+        return kwargs['id']
 
 
 class Worker:

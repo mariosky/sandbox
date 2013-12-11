@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify ,json
 
 from eval_py.apply_test import exec_sandbox
-from eval_py.Redis_Cola import Cola
+from eval_py.Redis_Cola import Cola, Task
 import docker
 import requests
 
@@ -52,11 +52,21 @@ def _execute_queue(code=None):
     rpc = request.json
     code = rpc["params"][0]
     task = {"id": None,"method": "exec","params": {"code": code}}
-    server.enqueue(**task)
+    task_id = server.enqueue(**task)
 
-    result= {"result":"added" , "error": None, "id": 11}
-    print result
+    result= {"result":"added" , "error": None, "id": task_id}
     return jsonify(**result)
+
+
+
+@app.route('/_get_result',methods=['POST'])
+def get_result():
+    rpc = request.json
+    task_id = rpc["task_id"]
+    t = Task(task_id)
+    t.get_result('cola')
+    return jsonify(t.result)
+
 
 
 test = '''
