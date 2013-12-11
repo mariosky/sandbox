@@ -53,10 +53,10 @@ def _execute_queue(code=None):
     code = rpc["params"][0]
     task = {"id": None,"method": "exec","params": {"code": code}}
     server.enqueue(**task)
-    print json.dumps({"result":"added" , "error": None, "id": 11})
-    result=json.dumps({"result":"added" , "error": None, "id": 11})
+
+    result= {"result":"added" , "error": None, "id": 11}
     print result
-    return jsonify(result)
+    return jsonify(**result)
 
 
 test = '''
