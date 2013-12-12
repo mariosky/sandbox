@@ -65,7 +65,7 @@ def hang():
 '''
 
 test = '''
-
+import sys
 import unittest
 
 class Test(unittest.TestCase):
