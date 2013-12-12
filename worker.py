@@ -7,7 +7,7 @@ import uuid
 import time
 
 test = '''
-
+import sys
 import unittest
 
 class Test(unittest.TestCase):
