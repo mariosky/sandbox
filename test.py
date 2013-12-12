@@ -67,7 +67,7 @@ def get_result():
     print 'id', task_id
     t = Task(id=task_id)
     print 't',t
-    t.get_result('cola')
+    t.get_result('curso')
     print 't.result', t.result
     return jsonify(t.result)
 
