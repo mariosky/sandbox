@@ -69,7 +69,7 @@ def get_result():
     print 't',t
     t.get_result('curso')
     print 't.result', t.result
-    return jsonify(t.result)
+    return jsonify(result=t.result[0], outcome=t.result[0])
 
 
 
