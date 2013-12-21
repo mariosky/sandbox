@@ -10,6 +10,7 @@ def execute():
     rpc = request.json
     code = rpc["params"][0]
     out = exec_sandbox(code,test)
+    print rpc,code, out
     return jsonify(result=out)
 
 if __name__ == "__main__":
