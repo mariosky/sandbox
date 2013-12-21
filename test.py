@@ -7,7 +7,7 @@ import requests
 
 
 dC = docker.Client(base_url='unix://var/run/docker.sock', version="1.6", timeout=60)
-BASE_IMAGE = 'mariosky/python_sandbox'
+BASE_IMAGE = 'mariosky/sandbox_worker'
 
 app = Flask(__name__)
 
@@ -133,7 +133,7 @@ def get_image(image_name=BASE_IMAGE):
 
 
 def make_container():
-    return dC.create_container( get_image()['Id'], command = "python /home/sandbox/test.py", ports={"5000/tcp": {}})
+    return dC.create_container( get_image()['Id'], command = "python /home/sandbox/execute_ws.py", ports={"5000/tcp": {}})
 
 
 def start(cont):

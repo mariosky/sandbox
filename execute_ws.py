@@ -1,14 +1,15 @@
-
-from eval_py.Redis_Cola import Cola, Task, Worker
-
+from flask import Flask, render_template, request, jsonify ,json
 from eval_py.apply_test import exec_sandbox
 
-import uuid
-import time
+@app.route('/_execute', methods=['POST'])
+def execute():
+    rpc = request.json
+    code = rpc["params"][0]
+    out = exec_sandbox(code,test)
+    return jsonify(result=out)
 
 test = '''
-import sys
-import unittest
+import unittest, sys, json
 
 class Test(unittest.TestCase):
     def setUp(self):
@@ -43,27 +44,4 @@ class TestFoo(unittest.TestCase):
 suite = unittest.TestLoader().loadTestsFromTestCase(Test)
 test_result = unittest.TextTestRunner(descriptions=False, verbosity=0, stream=sys.stderr).run(suite)
 '''
-
-
-
-server = Cola("curso")
-
-
-## Each Worker
-worker = Worker(uuid.uuid4(), server)
-
-while True:
-    t = worker.pull_task()
-
-    if (t):
-        print test
-        code = t.params['code']
-        t.result = exec_sandbox(code,test)
-        t.put_result(worker)
-    else:
-        pass
-
-    worker.send_heartbeat()
-
-
 
