@@ -38,6 +38,7 @@ def execute_sand(code=None):
     port = dC.inspect_container(cont)['NetworkSettings']['Ports']['5000/tcp'][0]['HostPort']
     url = "http://127.0.0.1:%s/_execute" % (port)
     while dC.logs(cont) == "":
+        print dC.logs(cont)
         print "waiting..."
 
     r = requests.post(url, data=json.dumps(data), headers=headers)
