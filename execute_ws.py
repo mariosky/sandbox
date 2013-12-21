@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify ,json
+from flask import Flask, request, jsonify
 from eval_py.apply_test import exec_sandbox
 
 app = Flask(__name__)
