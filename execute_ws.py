@@ -1,12 +1,19 @@
 from flask import Flask, render_template, request, jsonify ,json
 from eval_py.apply_test import exec_sandbox
 
+app = Flask(__name__)
+
+
+
 @app.route('/_execute', methods=['POST'])
 def execute():
     rpc = request.json
     code = rpc["params"][0]
     out = exec_sandbox(code,test)
     return jsonify(result=out)
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
 
 test = '''
 import unittest, sys, json
