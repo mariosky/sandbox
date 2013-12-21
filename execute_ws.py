@@ -8,9 +8,11 @@ app = Flask(__name__)
 @app.route('/_execute', methods=['POST'])
 def execute():
     rpc = request.json
+    print 'rpc worker',rpc
     code = rpc["params"][0]
+    print code
     out = exec_sandbox(code,test)
-    print rpc,code, out
+    print out
     return jsonify(result=out)
 
 if __name__ == "__main__":
