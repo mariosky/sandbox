@@ -103,5 +103,7 @@ test_result = unittest.TextTestRunner(descriptions=False, verbosity=0, stream=sy
 '''
 if __name__ == '__main__':
     out = exec_sandbox(code,test)
+    print out
+
 
 

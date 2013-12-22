@@ -11,7 +11,8 @@ def execute():
     print 'rpc worker',rpc
     code = rpc["params"][0]
     print code
-    out = exec_sandbox(code,test)
+    print test
+    out = exec_sandbox(code, test)
     print out
     return jsonify(result=out)
 
