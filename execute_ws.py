@@ -8,16 +8,12 @@ app = Flask(__name__)
 @app.route('/_execute', methods=['POST'])
 def execute():
     rpc = request.json
-    print 'rpc worker',rpc
     code = rpc["params"][0]
-    print code
-    print test
-    out = exec_sandbox(code, test)
-    print out
+    try:
+        out = exec_sandbox(code, test)
+    except Exception:
+        print Exception.message
     return jsonify(result=out)
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0')
 
 test = '''
 import unittest, sys, json
@@ -56,3 +52,5 @@ suite = unittest.TestLoader().loadTestsFromTestCase(Test)
 test_result = unittest.TextTestRunner(descriptions=False, verbosity=0, stream=sys.stderr).run(suite)
 '''
 
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
