@@ -40,18 +40,12 @@ def execute_sand(code=None):
     while dC.logs(cont) == "":
         print dC.logs(cont)
         print "waiting..."
-    print url
-    print dC.logs(cont)
-    print data, headers
     r = None
     try:
          r = requests.post(url, data=json.dumps(data), headers=headers)
     except Exception:
         print Exception.message
 
-    print r
-    print r.json()
-    print dC.logs(cont)
     return jsonify(r.json())
 
 
