@@ -1,7 +1,7 @@
 __author__ = 'mariosky'
 import redis
 
-HOST = "127.0.0.1"
+HOST = "96.126.96.132"
 PORT = 6379
 APP_NAME = 'cola'
 WORKER_HEARTBEAT_INTERVAL = 10  #Time a worker waits for a Task before unblocking to send a heartbeat
@@ -93,7 +93,6 @@ class Worker:
         #This is a blocking operation
         #task is a tuple (queue_name, task_id)
         task = r.blpop(self.cola.task_queue, time_out)
-        print task
         if task:
             #Get Task Details
             _task = r.get(task[1])
@@ -109,7 +108,6 @@ class Worker:
             return None
 
     def send_heartbeat(self, timeout = WORKER_HEARTBEAT_INTERVAL+5):
-        print self.id
         r.set(self.id, 1)
         r.expire(self.id, timeout)
 
