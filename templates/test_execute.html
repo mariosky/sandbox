@@ -134,6 +134,7 @@
     function poll(){
         $.ajax({ url: $SCRIPT_ROOT + '/_get_result',
             type: "POST",
+            contentType: "application/json",
             data: JSON.stringify({"jsonrpc": "2.0", "method": "_execute", "params": [null], "id": task_id }),
             success: function(data){
             //Update your dashboard gauge
