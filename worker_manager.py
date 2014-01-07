@@ -1,10 +1,12 @@
 
-import docker
+import docker, redis
 from eval_py.Redis_Cola import Cola
 
 
 dC = docker.Client(base_url='unix://var/run/docker.sock', version="1.6", timeout=60)
 BASE_IMAGE = 'mariosky/sandbox_worker'
+
+
 
 
 def create_worker():

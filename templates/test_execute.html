@@ -98,6 +98,8 @@
 
      });
 
+
+
      $("#send_btn_queue").on("click", function (){
            var code = editor.getValue();
 
@@ -118,7 +120,7 @@
 
                          $('<p>'+ 'En proceso...'+'<p/>', {class:"p"}).appendTo("#info_panel_body");
 
-
+                        poll();
 
                      },
                     error: function(jqXHR, textStatus, errorThrown)  {
@@ -127,6 +129,20 @@
 
 
      });
+
+
+    function poll(){
+        $.ajax({ url: $SCRIPT_ROOT + '/_get_result',
+            type: "POST",
+            data: JSON.stringify({"jsonrpc": "2.0", "method": "_execute", "params": [null], "id": task_id }),
+            success: function(data){
+            //Update your dashboard gauge
+            console.log(data.result[0]);
+
+            }, dataType: "json", complete: poll, timeout: 500 });
+    };
+
+
 
        $("#send_btn_result").on("click", function (){
            var code = editor.getValue();

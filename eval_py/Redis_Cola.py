@@ -42,7 +42,6 @@ class Task:
             return None
 
     def get_result(self, app_name, as_dict = False):
-        print '%s:result_set' % app_name, self.id
         if r.sismember('%s:result_set' % app_name, self.id):
             _dict = eval(r.get(self.id))
             self.__dict__.update(_dict)

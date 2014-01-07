@@ -56,7 +56,6 @@ while True:
     t = worker.pull_task()
 
     if (t):
-        print test
         code = t.params['code']
         t.result = exec_sandbox(code,test)
         t.put_result(worker)
