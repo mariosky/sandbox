@@ -52,11 +52,12 @@ if __name__ == "__main__":
     server.initialize()
     print create_worker()
     print create_worker()
+    time.sleep(15)
     while True:
         time.sleep(15)
         dead_workers = server.get_dead_workers()
         for w in dead_workers:
-            container = w.split()[-1]
+            container = w.split(':')[-1]
             print "Killing: ",container
             dC.kill(container)
             print create_worker()
