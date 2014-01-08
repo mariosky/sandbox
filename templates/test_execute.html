@@ -138,7 +138,7 @@
             data: JSON.stringify({"jsonrpc": "2.0", "method": "_execute", "params": [null], "id": task_id }),
             success: function(data){
             //Update your dashboard gauge
-            console.log(data.result.outcome);
+            console.log(data.outcome);
 
             }, dataType: "json", complete: poll, timeout: 5000 });
     };
