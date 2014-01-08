@@ -79,9 +79,11 @@ class Cola:
         t = Task(**kwargs)
         t.enqueue(self.app_name)
         return kwargs['id']
+
     def get_workers(self):
         workers = r.smembers(self.worker_set)
         for w in workers:
+            pass
 
 
 
