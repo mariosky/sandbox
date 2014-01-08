@@ -139,12 +139,17 @@
             success: function(data){
             //Update your dashboard gauge
               $("#info_panel_body").html("");
-
+                    if (data.outcome != -1)
+                    {
                         var info_list = data.result;
                         for (var i=0; i<info_list.length; i++){
                          $('<p>'+ info_list[i]+'<p/>', {class:"p"}).appendTo("#info_panel_body");
                         }
+                    }
+                    else
+                    {
 
+                    }
             console.log(data.outcome);
 
             }, dataType: "json",
