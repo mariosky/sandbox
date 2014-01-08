@@ -3,8 +3,7 @@ from eval_py.Redis_Cola import Cola, Task, Worker
 
 from eval_py.apply_test import exec_sandbox
 
-import uuid
-import time
+import os
 
 test = '''
 import sys
@@ -50,7 +49,7 @@ server = Cola("curso")
 
 
 ## Each Worker
-worker = Worker(uuid.uuid4(), server)
+worker = Worker(os.environ['HOSTNAME'], server)
 
 while True:
     t = worker.pull_task()

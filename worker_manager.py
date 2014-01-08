@@ -1,5 +1,5 @@
 
-import docker, redis
+import docker
 from eval_py.Redis_Cola import Cola
 
 
