@@ -66,12 +66,20 @@ def _execute_queue(code=None):
 @app.route('/_get_result',methods=['POST'])
 def get_result():
     rpc = request.json
+    #We only need the Task identifier
+    #TO DO:
+    # No ID, Task Not Found
     task_id = rpc["id"]
     t = Task(id=task_id)
-    t.get_result('curso')
-    print 't.result', t.result
-    return jsonify(result=t.result[0], outcome=t.result[1])
 
+    # outcome:
+    # -1 No result found
+    # 0 Sub-process Success
+    # 1 Sub-process Failure
+    if t.get_result('curso'):
+        return jsonify(result=t.result[0], outcome=t.result[1])
+    else:
+        return jsonify(outcome=-1)
 
 
 test = '''
