@@ -151,6 +151,8 @@
 
             complete: function (jqXHR,textStatus ){
                var data = $.parseJSON(jqXHR.responseText);
+               console.log(data.outcome);
+               console.log(data);
                if (data.outcome == -1)
                        poll();
             },
