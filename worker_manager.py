@@ -50,8 +50,8 @@ def start(cont):
 if __name__ == "__main__":
     server = Cola("curso")
     server.initialize()
-    create_worker()
-    create_worker()
+    print create_worker()
+    print create_worker()
     while True:
         time.sleep(15)
         dead_workers = server.get_dead_workers()
@@ -59,6 +59,6 @@ if __name__ == "__main__":
             container = w.split()[-1]
             print "Killing: ",container
             dC.kill(container)
-            create_worker()
+            print create_worker()
 
 
