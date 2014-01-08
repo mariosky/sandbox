@@ -1,5 +1,6 @@
 
 import docker
+import time
 from eval_py.Redis_Cola import Cola
 
 
@@ -12,6 +13,7 @@ BASE_IMAGE = 'mariosky/sandbox_worker'
 def create_worker():
     cont = make_container()
     start(cont)
+    return cont
 
 
 class ContainerException(Exception):
@@ -50,3 +52,14 @@ if __name__ == "__main__":
     server.initialize()
     create_worker()
     create_worker()
+    while True:
+        time.sleep(15)
+        dead_workers = server.get_dead_workers()
+        for w in dead_workers:
+            container = w.split()[-1]
+            print "Killing: ",container
+            dC.kill(container)
+            create_worker()
+
+
+

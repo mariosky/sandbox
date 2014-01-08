@@ -80,10 +80,16 @@ class Cola:
         t.enqueue(self.app_name)
         return kwargs['id']
 
-    def get_workers(self):
+    def get_dead_workers(self):
         workers = r.smembers(self.worker_set)
+        dead = []
         for w in workers:
-            pass
+            if r.get(w):
+                pass
+            else:
+                r.srem(self.worker_set,w)
+                dead.append(w)
+        return dead
 
 
 
