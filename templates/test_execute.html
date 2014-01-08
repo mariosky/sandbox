@@ -140,7 +140,16 @@
             //Update your dashboard gauge
             console.log(data.outcome);
 
-            }, dataType: "json", complete: poll, timeout: 5000 });
+            }, dataType: "json",
+
+            complete: function (jqXHR,textStatus ){
+               var data = $.parseJSON(jqXHR.responseText);
+               if (data.outcome == -1)
+                       poll();
+
+
+            },
+            timeout: 5000 });
     };
 
 
