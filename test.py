@@ -6,46 +6,12 @@ import docker
 import requests
 
 
-dC = docker.Client(base_url='unix://var/run/docker.sock', version="1.6", timeout=60)
-BASE_IMAGE = 'mariosky/sandbox_worker'
-
 app = Flask(__name__)
 
 @app.route('/')
 def index():
     return render_template('test_execute.html')
 
-
-@app.route('/_execute', methods=['POST'])
-def execute():
-    rpc = request.json
-    code = rpc["params"][0]
-    out = exec_sandbox(code,test)
-    return jsonify(result=out)
-
-
-@app.route('/_execute_sandboxed', methods=['POST'])
-def execute_sand(code=None):
-    dC = docker.Client(base_url='unix://var/run/docker.sock', version="1.6", timeout=60)
-    rpc = request.json
-    code = rpc["params"][0]
-
-    data = {"jsonrpc": "2.0", "method": "_execute", "params": [code], "id": 1 }
-    cont = make_container()
-    start(cont)
-    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-    port = dC.inspect_container(cont)['NetworkSettings']['Ports']['5000/tcp'][0]['HostPort']
-    url = "http://127.0.0.1:%s/_execute" % (port)
-    while dC.logs(cont) == "":
-        print dC.logs(cont)
-        print "waiting..."
-    r = None
-    try:
-         r = requests.post(url, data=json.dumps(data), headers=headers)
-    except Exception:
-        print Exception.message
-
-    return jsonify(r.json())
 
 
 @app.route('/_execute_queue', methods=['POST'])
@@ -117,36 +83,6 @@ class TestFoo(unittest.TestCase):
 suite = unittest.TestLoader().loadTestsFromTestCase(Test)
 test_result = unittest.TextTestRunner(verbosity=2, stream=sys.stderr).run(suite)
 '''
-
-class ContainerException(Exception):
-    """
-    There was some problem generating or launching a docker container
-    for the user
-    """
-    pass
-
-class ImageException(Exception):
-    """
-    There was some problem reading image
-    """
-    pass
-
-def get_image(image_name=BASE_IMAGE):
-    # TODO catch ConnectionError - requests.exceptions.ConnectionError
-    for image in dC.images():
-        if image['Repository'] == image_name and image['Tag'] == 'latest':
-            return image
-    raise ImageException()
-    return None
-
-
-def make_container():
-    return dC.create_container( get_image()['Id'], command = "python /home/sandbox/execute_ws.py", ports={"5000/tcp": {}})
-
-
-def start(cont):
-    dC.start(cont['Id'], port_bindings={"5000/tcp": [{'HostIp': '', 'HostPort': ''}]})
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
