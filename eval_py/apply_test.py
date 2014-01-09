@@ -95,7 +95,7 @@ class TestFoo(unittest.TestCase):
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(Test)
-test_result = unittest.TextTestRunner(descriptions=False, verbosity=0, stream=sys.stderr).run(suite)
+test_result = unittest.TextTestRunner(verbosity=2, stream=sys.stderr).run(suite)
 '''
 if __name__ == '__main__':
     out = exec_sandbox(code,test)
