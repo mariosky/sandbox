@@ -152,9 +152,7 @@
                     }
                     else
                     {
-                        $("#info_panel_body").html("");
 
-                         $('<p>'+ 'TIME OUT'+'<p/>', {class:"p"}).appendTo("#info_panel_body");
                     }
             console.log(data.outcome);
 
@@ -173,6 +171,8 @@
 
                    else
                    {
+                        $("#info_panel_body").html("");
+                        $('<p>'+ 'TIME OUT'+'<p/>', {class:"p"}).appendTo("#info_panel_body");
 
                    }
                }
