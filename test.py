@@ -115,7 +115,7 @@ class TestFoo(unittest.TestCase):
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(Test)
-test_result = unittest.TextTestRunner(descriptions=False, verbosity=2, stream=sys.stderr).run(suite)
+test_result = unittest.TextTestRunner(verbosity=2, stream=sys.stderr).run(suite)
 '''
 
 class ContainerException(Exception):
