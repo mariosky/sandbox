@@ -33,6 +33,8 @@
   $(document).ready(function() {
 
       task_id = 0;
+      number_of_tries = 0;
+
 
      $("#send_btn").on("click", function (){
            var code = editor.getValue();
@@ -115,6 +117,7 @@
                     success: function(data, textStatus, jqXHR) {
 
                             task_id =data.id;
+                            number_of_tries=0;
 
                         $("#info_panel_body").html("");
 
@@ -138,6 +141,7 @@
             data: JSON.stringify({"jsonrpc": "2.0", "method": "_execute", "params": [null], "id": task_id }),
             success: function(data){
             //Update your dashboard gauge
+            number_of_tries++;
               $("#info_panel_body").html("");
                     if (data.outcome != -1)
                     {
@@ -158,8 +162,10 @@
                var data = $.parseJSON(jqXHR.responseText);
                console.log(data.outcome);
                console.log(data);
-               if (data.outcome == -1)
+               if (data.outcome == -1 && number_of_tries < 150)
+               {
                        poll();
+               }
             },
             timeout: 5000 });
     };
