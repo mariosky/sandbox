@@ -40,7 +40,8 @@ def output_as_list(test_output):
 
 
 
-code = '''
+if __name__ == '__main__':
+    code = '''
 def foo():
     print 'hello world!'
 
@@ -60,7 +61,7 @@ def hang():
         pass
 '''
 
-test = '''
+    test = '''
 import sys
 import unittest
 
@@ -97,7 +98,7 @@ class TestFoo(unittest.TestCase):
 suite = unittest.TestLoader().loadTestsFromTestCase(Test)
 test_result = unittest.TextTestRunner(verbosity=2, stream=sys.stderr).run(suite)
 '''
-if __name__ == '__main__':
+
     out = exec_sandbox(code,test)
     print out
 

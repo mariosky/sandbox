@@ -39,7 +39,7 @@ def get_image(image_name=BASE_IMAGE):
 
 
 def make_container(command = "python /home/sandbox/worker.py"):
-    return dC.create_container( get_image()['Id'], command=command , ports={"6379/tcp": {}})
+    return dC.create_container( get_image()['Id'], command=command, mem_limit=1049000, ports={"6379/tcp": {}})
 
 
 def start(cont):
