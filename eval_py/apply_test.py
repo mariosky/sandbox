@@ -1,8 +1,4 @@
-__author__ = 'mariosky'
-
-
 # Based on: http://readevalprint.github.com/blog/python-sandbox-with-pypy-part2.html
-
 
 
 import shutil, os, tempfile

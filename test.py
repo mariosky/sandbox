@@ -55,7 +55,7 @@ def _execute_queue(code=None):
     #server.initialize()
     rpc = request.json
     code = rpc["params"][0]
-    task = {"id": None,"method": "exec","params": {"code": code}}
+    task = {"id": None,"method": "exec","params": {"code": code, "test": test}}
     task_id = server.enqueue(**task)
 
     result= {"result":"added" , "error": None, "id": task_id}
