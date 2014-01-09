@@ -152,7 +152,9 @@
                     }
                     else
                     {
+                        $("#info_panel_body").html("");
 
+                         $('<p>'+ 'TIME OUT'+'<p/>', {class:"p"}).appendTo("#info_panel_body");
                     }
             console.log(data.outcome);
 
@@ -162,9 +164,17 @@
                var data = $.parseJSON(jqXHR.responseText);
                console.log(data.outcome);
                console.log(data);
-               if (data.outcome == -1 && number_of_tries < 150)
+               if (data.outcome == -1)
                {
+                   if (number_of_tries < 150)
+                   {
                        poll();
+                   }
+
+                   else
+                   {
+
+                   }
                }
             },
             timeout: 5000 });
