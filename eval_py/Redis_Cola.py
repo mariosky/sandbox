@@ -91,6 +91,9 @@ class Cola:
                 dead.append(w)
         return dead
 
+    def get_workers(self):
+        pattern = '%s:worker:*' % (self.app_name)
+        return r.keys(pattern)
 
 
 class Worker:
