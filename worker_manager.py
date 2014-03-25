@@ -51,11 +51,12 @@ def kill_all(image=BASE_IMAGE):
         dC.kill(c)
 
 
-def get_containers(image):
+def get_containers(image=BASE_IMAGE):
     return [ c['Id'][:12] for c in dC.containers() if c['Image'].split(':')[0] == image ]
 
 
 if __name__ == "__main__":
+    kill_all()
     server = Cola("curso")
     print "Init Queue"
     server.initialize()
