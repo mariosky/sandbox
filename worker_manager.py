@@ -55,11 +55,12 @@ if __name__ == "__main__":
     time.sleep(15)
     while True:
         time.sleep(15)
-        dead_workers = server.get_dead_workers()
-        for w in dead_workers:
-            container = w.split(':')[-1]
-            print "Killing: ",container
-            dC.kill(container)
-            print create_worker()
+        containers = [ c['Id'][:12] for c in dC.containers() if c['Image'].split(':')[0] == BASE_IMAGE ]
+        workers = [ w.split(":")[2] for w in server.get_workers()]
+        for c in containers:
+            if c not in workers:
+                print "Killing: ", c
+                dC.kill(c)
+                print create_worker()
 
 
