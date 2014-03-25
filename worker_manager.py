@@ -54,7 +54,7 @@ if __name__ == "__main__":
     print create_worker()
     time.sleep(15)
     while True:
-        time.sleep(15)
+        time.sleep(30)
         containers = [ c['Id'][:12] for c in dC.containers() if c['Image'].split(':')[0] == BASE_IMAGE ]
         workers = [ w.split(":")[2] for w in server.get_workers()]
         for c in containers:
