@@ -45,6 +45,14 @@ def make_container(command = "python /home/sandbox/worker.py"):
 def start(cont):
     dC.start(cont['Id'], port_bindings={"6379/tcp": [{'HostIp': '', 'HostPort': ''}]})
 
+def kill_all(image=BASE_IMAGE):
+    for c in containers():
+        print "Killing: ", c
+        dC.kill(c)
+
+
+def containers(image):
+    return [ c['Id'][:12] for c in dC.containers() if c['Image'].split(':')[0] == image ]
 
 
 if __name__ == "__main__":
@@ -55,7 +63,7 @@ if __name__ == "__main__":
     time.sleep(15)
     while True:
         time.sleep(30)
-        containers = [ c['Id'][:12] for c in dC.containers() if c['Image'].split(':')[0] == BASE_IMAGE ]
+        containers = containers(BASE_IMAGE)
         workers = [ w.split(":")[2] for w in server.get_workers()]
         for c in containers:
             if c not in workers:
