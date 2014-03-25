@@ -46,7 +46,7 @@ def start(cont):
     dC.start(cont['Id'], port_bindings={"6379/tcp": [{'HostIp': '', 'HostPort': ''}]})
 
 def kill_all(image=BASE_IMAGE):
-    for c in containers():
+    for c in containers(image):
         print "Killing: ", c
         dC.kill(c)
 
