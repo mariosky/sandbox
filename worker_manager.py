@@ -62,9 +62,9 @@ if __name__ == "__main__":
     server.initialize()
     print create_worker()
     print create_worker()
-    time.sleep(15)
+    time.sleep(4)
     while True:
-        time.sleep(20)
+        time.sleep(1)
         containers = get_containers(BASE_IMAGE)
         workers = [ w.split(":")[2] for w in server.get_workers()]
         for c in containers:

@@ -4,7 +4,7 @@ import redis
 HOST = "96.126.96.132"
 PORT = 6379
 APP_NAME = 'cola'
-WORKER_HEARTBEAT_INTERVAL = 10  #Time a worker waits for a Task before unblocking to send a heartbeat
+WORKER_HEARTBEAT_INTERVAL = 1  #Time a worker waits for a Task before unblocking to send a heartbeat
 
 
 r = redis.Redis(host=HOST, port=PORT)
@@ -121,7 +121,7 @@ class Worker:
         else:
             return None
 
-    def send_heartbeat(self, timeout = WORKER_HEARTBEAT_INTERVAL+5):
+    def send_heartbeat(self, timeout = WORKER_HEARTBEAT_INTERVAL+1):
         pipe = r.pipeline()
         pipe.set(self.id, 1)
         pipe.expire(self.id, timeout)
