@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Based on: http://readevalprint.github.com/blog/python-sandbox-with-pypy-part2.html
 
 
@@ -8,10 +9,12 @@ import subprocess,json
 
 def exec_sandbox(code, test):
     try:
-        code = code + test
+        code = """# -*- coding: utf-8 -*-
+        """ + code + test
+        code = unicode(code)
         tmp_dir = tempfile.mkdtemp()
         tmp_script = open(os.path.join(tmp_dir, "script.py"),'w')
-        tmp_script.write(code)
+        tmp_script.write(code.encode('utf8'))
         tmp_script.close()
         script_path = os.path.join(tmp_dir, "script.py")
         result = [],""
@@ -59,13 +62,13 @@ def process_error_as_json(output):
 
 
 if __name__ == '__main__':
-    code = '''
+    code = u'''
 def foo():
     print 'hello world!'
 
 
 def solution(nums):
-    print "Hola"
+    print "José"
     if nums > 0 :
         nums.sort()
 
@@ -80,7 +83,7 @@ def hang():
         pass
 '''
 
-    test = '''
+    test = u'''
 import sys
 import unittest
 
