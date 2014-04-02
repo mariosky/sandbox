@@ -2,7 +2,7 @@
 
 
 import shutil, os, tempfile
-import subprocess
+import subprocess,json
 
 
 
@@ -17,10 +17,11 @@ def exec_sandbox(code, test):
         result = [],""
         try:
             out = subprocess.check_output(['python',script_path], stderr=subprocess.STDOUT)
-            result = (output_as_list(out),0)
+            result = (out,0)
 
         except subprocess.CalledProcessError , e:
-            result = output_as_list(e.output), e.returncode
+            print "Error"
+            result = process_error_as_json(e.output), e.returncode
 
         finally:
             shutil.rmtree(tmp_dir)
@@ -28,15 +29,19 @@ def exec_sandbox(code, test):
     except Exception, e:
         return ['Error, could not evaluate'], e
 
-def output_as_list(test_output):
+def process_error_as_json(output):
     res = []
-    if not test_output:
-        return res
+    if output:
+        for l in output.split('\n'):
+            if len(l)>0  and l[:3] != '===' and l[:3] != '---' and 'Traceback' not in l and l[:2] != '  ':
+                res.append(l)
 
-    for l in test_output.split('\n'):
-        if len(l)>0  and l[:3] != '===' and l[:3] != '---' and 'Traceback' not in l and l[:2] != '  ':
-            res.append(l)
-    return res
+    result = {}
+    result['result'] = "ProcessError"
+    result['errors']=  res
+    result['failures']=  []
+    result['successes']=  []
+    return json.dumps(result)
 
 
 
@@ -49,11 +54,10 @@ def foo():
 def solution(nums):
     if nums > 0 :
         nums.sort()
-        return [1,2]
-        #return nums
+        return nums
 
     else:
-        return [1]
+        return []
 
 
 def hang():
@@ -64,6 +68,18 @@ def hang():
     test = '''
 import sys
 import unittest
+
+import json
+
+class ResultadoPrueba(unittest.TestResult):
+    def __init__(self):
+         super(ResultadoPrueba, self).__init__()
+         self.success = []
+    def addSuccess(self, test):
+         self.success.append(test)
+    def shouldStop(self, test):
+         return False
+
 
 class Test(unittest.TestCase):
     def setUp(self):
@@ -94,13 +110,53 @@ class TestFoo(unittest.TestCase):
             sys.stdout = saved_stdout
             print output
 
-
 suite = unittest.TestLoader().loadTestsFromTestCase(Test)
-test_result = unittest.TextTestRunner(verbosity=2, stream=sys.stderr).run(suite)
+Resultado = ResultadoPrueba()
+suite.run(Resultado)
+result = {}
+
+if Resultado.wasSuccessful():
+    result['result'] = "Success"
+else:
+    result['result'] = "Failure"
+result['errors']=  [str(e[0])   for e in Resultado.errors]
+result['failures']=  [str(e[0]) for e in Resultado.failures]
+result['successes']=  [str(e)  for e in Resultado.success]
+print json.dumps(result)
 '''
 
     out = exec_sandbox(code,test)
     print out
+def solution(nums):
+    if nums > 0 :
+        nums.sort()
+        #return [1,2]
+        for r in range(10):
+            print "Hola"
+        return nums
+    else:
+        return [1]
 
+
+import sys
+import unittest
+
+class ResultadoPrueba(unittest.TestResult):
+    def __init__(self):
+         super(ResultadoPrueba, self).__init__()
+         self.success = []
+    def addSuccess(self, test):
+         self.success.append(test)
+    def shouldStop(self, test):
+         return False
+
+
+class Test(unittest.TestCase):
+    def setUp(self):
+        pass
+    def test_order(self):
+        self.assertEqual(solution([2,6,1,5]),[1,2,5,6])
+    def test_none(self):
+        self.assertEqual(solution(None),[])
 
 
