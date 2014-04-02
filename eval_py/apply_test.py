@@ -17,7 +17,7 @@ def exec_sandbox(code, test):
         result = [],""
         try:
             out = subprocess.check_output(['python',script_path], stderr=subprocess.STDOUT)
-            result = (out,0)
+            result = (process_out_as_json(out),0)
 
         except subprocess.CalledProcessError , e:
             print "Error"
@@ -28,6 +28,17 @@ def exec_sandbox(code, test):
         return result
     except Exception, e:
         return ['Error, could not evaluate'], e
+
+def process_out_as_json(output):
+    # La salida de STDOUT estara primero
+    # Extraerla y agregarla al json out
+
+    if output:
+        out_list = output.split("!!!---\n")
+        stdout = out_list[0]
+        output_temp = json.loads(out_list[1])
+        output_temp["stdout"] = stdout
+        return json.dumps(output_temp)
 
 def process_error_as_json(output):
     res = []
@@ -43,6 +54,8 @@ def process_error_as_json(output):
     result['successes']=  []
     return json.dumps(result)
 
+#def process_output_as_json(output):
+
 
 
 if __name__ == '__main__':
@@ -52,8 +65,10 @@ def foo():
 
 
 def solution(nums):
+    print "Hola"
     if nums > 0 :
         nums.sort()
+
         return nums
 
     else:
@@ -122,11 +137,13 @@ else:
 result['errors']=  [str(e[0])   for e in Resultado.errors]
 result['failures']=  [str(e[0]) for e in Resultado.failures]
 result['successes']=  [str(e)  for e in Resultado.success]
+print "!!!---"
 print json.dumps(result)
 '''
 
     out = exec_sandbox(code,test)
     print out
+
 def solution(nums):
     if nums > 0 :
         nums.sort()
