@@ -93,7 +93,3 @@ public class ProductTest
     }
 }"""
 
-
-r = run_test(code, test)
-for l in r[0].split('\n'):
-    print l
