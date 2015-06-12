@@ -4,7 +4,8 @@ import os
 
 HOST = os.environ['REDIS_HOST']
 PORT = 6379
-APP_NAME = 'cola'
+APP_NAME = os.environ['APP_NAME']
+
 WORKER_HEARTBEAT_INTERVAL = 1  #Time a worker waits for a Task before unblocking to send a heartbeat
 
 

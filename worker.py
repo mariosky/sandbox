@@ -3,15 +3,14 @@ from tester.Redis_Cola import Cola, Task, Worker
 
 import os
 
-
-server = Cola("curso")
+lang = os.environ['LANG']
+server = Cola(os.environ['APP_NAME'])
 worker = Worker(os.environ['HOSTNAME'], server)
-
 
 
 # Send a heartbeat after created
 worker.send_heartbeat()
-lang = os.environ['LANG']
+
 
 if lang == 'Python':
     from tester.test_python import run_test
