@@ -19,7 +19,8 @@ def run_test(code, test, type=None):
         result = [],""
         try:
             _compile(tmp_dir)
-            result = _test(tmp_dir)
+            _test(tmp_dir)
+            return _result()
         except subprocess.CalledProcessError , e:
             result =  (e.output, e.returncode)
         finally:
@@ -48,6 +49,19 @@ def _test(tmp_dir):
     finally:
         return result
 
+def _result():
+    import xml.etree.ElementTree as ET
+    tree = ET.parse('tester/TestResult.xml')
+    a = open('LICENSE')
+    r = {
+        'successes':[ e.attrib['name'] for e in  tree.findall(".//test-case[@result='Success']")],
+        'failures':[ e.attrib['name'] for e in  tree.findall(".//test-case[@result='Failure']")],
+        'errors': [],
+        'stdout': a.read(),
+        'result': tree.findall("test-suite")[0].attrib['result']
+    }
+
+    return json.dumps(r)
 
 code = """
 using System;
