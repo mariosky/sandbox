@@ -16,15 +16,25 @@ def run_test(code, test, type=None):
         tmp_script = open(os.path.join(tmp_dir, "ProgramTest.cs"),'w')
         tmp_script.write(code.encode('utf8'))
         tmp_script.close()
-        result = [],""
+        result = [],0
+
+        #COMPILE
         try:
-            _compile(tmp_dir)
-            _test(tmp_dir)
-            return _result()
+            out = subprocess.check_output(['mcs',os.path.join(tmp_dir, "ProgramTest.cs"),  '/pkg:nunit',  '-target:library'], stderr=subprocess.STDOUT)
+            result = (out,0)
+        except subprocess.CalledProcessError , e:
+            result = (e.output, e.returncode)
+            return result
+
+        #TEST
+        try:
+            out = subprocess.check_output(['nunit-console','-nologo', '-nodots','-output=out.txt',os.path.join(tmp_dir, "ProgramTest.dll")], stderr=subprocess.STDOUT)
+            result = (out,0)
         except subprocess.CalledProcessError , e:
             result =  (e.output, e.returncode)
         finally:
             shutil.rmtree(tmp_dir)
+
         return result
     except Exception, e:
         return ["Error, could not evaluate"], e

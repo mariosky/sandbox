@@ -17,7 +17,7 @@ code = """
 using System;
 public class Product
 {
-        public int code;
+        public int code
         public string desc;
 
         public Product(int c, string d)
@@ -75,7 +75,7 @@ def get(t_id):
         return "Snif"
 tid = put()
 
-while True:
+for i in range(5):
     print get(tid)
 
 
