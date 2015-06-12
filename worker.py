@@ -5,7 +5,7 @@ import os
 
 
 server = Cola("curso")
-worker = Worker(os.environ['HOST'], server)
+worker = Worker(os.environ['HOSTNAME'], server)
 
 
 
