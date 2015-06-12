@@ -75,7 +75,7 @@ def get(t_id):
         return "Snif"
 tid = put()
 
-for i in range(5):
+for i in range(30):
     print get(tid)
 
 
