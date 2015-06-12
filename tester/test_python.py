@@ -7,7 +7,7 @@ import subprocess,json
 
 
 
-def exec_sandbox(code, test):
+def run_test(code, test):
     try:
         code = """# -*- coding: utf-8 -*-
         """ + code + test
@@ -144,7 +144,7 @@ print "!!!---"
 print json.dumps(result)
 '''
 
-    out = exec_sandbox(code,test)
+    out = run_test(code,test)
     print out
 
 def solution(nums):
