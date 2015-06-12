@@ -2,12 +2,14 @@
 __author__ = 'mariosky'
 
 import os
+import json
+
 
 print os.environ['REDIS_HOST']
 print os.environ['APP_NAME']
 print os.environ['LANG']
 
-from tester.Redis_Cola import Cola, Task, Worker
+from tester.Redis_Cola import Cola, Task
 
 server = Cola("C#")
 
@@ -57,10 +59,37 @@ public class ProductTest
 
 
 
+def put():
+    task = {"id": None, "method": "exec", "params": {"code": code, "test": test}}
+    task_id = server.enqueue(**task)
+    return task_id
 
 
-task = {"id": None, "method": "exec", "params": {"code": code, "test": test}}
-task_id = server.enqueue(**task)
+def get(t_id):
+    t = Task(id=t_id)
+    t.get_result('C#')
+    if t.result:
+        return t.result
+        return json.loads( t.result[0])
+    else:
+        return "Snif"
+tid = put()
 
-print task_id
+while True:
+    print get(tid)
 
+
+#('{"successes": ["test_negativos (__main__.Test)", "test_suma_positivos (__main__.Test)"], "failures": [], "errors": [], "result": "Success", "stdout": ""}', 0)
+
+# import xml.etree.ElementTree as ET
+# tree = ET.parse('tester/TestResult.xml')
+# a = open('out.txt')
+# r = {
+#     'successes':[ e.attrib['name'] for e in  tree.findall(".//test-case[@result='Success']")],
+#     'failures':[ e.attrib['name'] for e in  tree.findall(".//test-case[@result='Failure']")],
+#     'errors': [],
+#     'stdout': a.read(),
+#     'result': tree.findall("test-suite")[0].attrib['result']
+#     }
+#
+# print json.dumps(r)
