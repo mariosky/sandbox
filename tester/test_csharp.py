@@ -18,8 +18,8 @@ def run_test(code, test, type=None):
         tmp_script.close()
         result = [],""
         try:
-            compile(tmp_dir)
-            result = run_test(tmp_dir)
+            _compile(tmp_dir)
+            result = _test(tmp_dir)
         except subprocess.CalledProcessError , e:
             result =  (e.output, e.returncode)
         finally:
@@ -28,7 +28,7 @@ def run_test(code, test, type=None):
     except Exception, e:
         return ["Error, could not evaluate"], e
 
-def compile(tmp_dir ):
+def _compile(tmp_dir ):
     result = None
     try:
         out = subprocess.check_output(['mcs',os.path.join(tmp_dir, "ProgramTest.cs"),  '/pkg:nunit',  '-target:library'], stderr=subprocess.STDOUT)
@@ -38,7 +38,7 @@ def compile(tmp_dir ):
     finally:
         return result
 
-def run_test(tmp_dir):
+def _test(tmp_dir):
     result = None
     try:
         out = subprocess.check_output(['nunit-console','-nologo', '-nodots',os.path.join(tmp_dir, "ProgramTest.dll")], stderr=subprocess.STDOUT)
