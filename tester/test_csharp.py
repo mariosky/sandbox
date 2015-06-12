@@ -54,8 +54,8 @@ def _result():
     tree = ET.parse('TestResult.xml')
     a = open('out.txt')
     r = {
-        'successes':[e.attrib['name']   for e in  tree.findall(".//test-case[@result='Success']")],
-        'failures':[ e.attrib['name'] for e in  tree.findall(".//test-case[@result='Failure']")],
+        'successes':[e.attrib['description']   for e in  tree.findall(".//test-case[@result='Success']")],
+        'failures':[ e.attrib['description'] for e in  tree.findall(".//test-case[@result='Failure']")],
         'errors': [],
         'stdout': a.read(),
         'result': tree.findall("test-suite")[0].attrib['result']
