@@ -1,7 +1,8 @@
 __author__ = 'mariosky'
 import redis
+import os
 
-HOST = "96.126.96.132"
+HOST = os.environ['REDIS_HOST']
 PORT = 6379
 APP_NAME = 'cola'
 WORKER_HEARTBEAT_INTERVAL = 1  #Time a worker waits for a Task before unblocking to send a heartbeat

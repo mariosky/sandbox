@@ -5,7 +5,7 @@ import os
 
 
 server = Cola("curso")
-worker = Worker(os.environ['HOSTNAME'], server)
+worker = Worker(os.environ['HOST'], server)
 
 # Send a heartbeat after created
 worker.send_heartbeat()
