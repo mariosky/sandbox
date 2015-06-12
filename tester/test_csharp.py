@@ -52,9 +52,9 @@ def _test(tmp_dir):
 def _result():
     import xml.etree.ElementTree as ET
     tree = ET.parse('TestResult.xml')
-    a = open('LICENSE')
+    a = open('out.txt')
     r = {
-        'successes':[ e.attrib['name'] for e in  tree.findall(".//test-case[@result='Success']")],
+        'successes':[e.attrib['name']   for e in  tree.findall(".//test-case[@result='Success']")],
         'failures':[ e.attrib['name'] for e in  tree.findall(".//test-case[@result='Failure']")],
         'errors': [],
         'stdout': a.read(),
