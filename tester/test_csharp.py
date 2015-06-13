@@ -25,7 +25,7 @@ def run_test(code, test, type=None):
         except subprocess.CalledProcessError , e:
             result = (e.output, e.returncode)
             result = ({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"},e.returncode)
-            return result
+            return json.dumps(result)
 
         #TEST
         try:
