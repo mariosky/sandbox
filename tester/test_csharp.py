@@ -24,7 +24,7 @@ def run_test(code, test, type=None):
             result = (out,0)
         except subprocess.CalledProcessError , e:
             result = (e.output, e.returncode)
-            r = { 'successes':[],'failures':[], 'errors': [], 'stdout': "", 'result': "Failure"}
+            result = ({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"},e.returncode)
             return result
 
         #TEST
