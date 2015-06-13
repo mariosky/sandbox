@@ -3,8 +3,8 @@ from tester.Redis_Cola import Cola, Task, Worker
 
 import os
 
-
-server = Cola(os.environ['LANG'])
+lang = os.environ['LANG']
+server = Cola(lang)
 worker = Worker(os.environ['HOSTNAME'], server)
 
 
