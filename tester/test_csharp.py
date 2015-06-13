@@ -23,9 +23,8 @@ def run_test(code, test, type=None):
             out = subprocess.check_output(['mcs',os.path.join(tmp_dir, "ProgramTest.cs"),  '/pkg:nunit',  '-target:library'], stderr=subprocess.STDOUT)
             result = (out,0)
         except subprocess.CalledProcessError , e:
-            result = (e.output, e.returncode)
-            result = ({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"},e.returncode)
-            return json.dumps(result)
+            result = (json.dumps({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"}),e.returncode)
+            return result
 
         #TEST
         try:
