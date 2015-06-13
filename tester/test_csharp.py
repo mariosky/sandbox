@@ -54,7 +54,7 @@ def _test(tmp_dir):
     result = None
     try:
         out = subprocess.check_output(['nunit-console','-nologo', '-nodots','-output=out.txt',os.path.join(tmp_dir, "ProgramTest.dll")], stderr=subprocess.STDOUT)
-        result = (out,0)
+        result = (_result(),0)
     except subprocess.CalledProcessError , e:
         result =  (e.output, e.returncode)
     finally:

@@ -17,7 +17,7 @@ code = """
 using System;
 public class Product
 {
-        public int code
+        public int code;
         public string desc;
 
         public Product(int c, string d)
