@@ -32,7 +32,7 @@ def run_test(code, test, type=None):
             out = subprocess.check_output(['nunit-console','-nologo', '-nodots','-output=out.txt',os.path.join(tmp_dir, "ProgramTest.dll")], stderr=subprocess.STDOUT)
             result = (_result(),0)
         except subprocess.CalledProcessError , e:
-            result =  (e.output, e.returncode)
+            result =  (_result(), e.returncode)
         finally:
             shutil.rmtree(tmp_dir)
 
@@ -54,48 +54,4 @@ def _result():
     }
 
     return json.dumps(r)
-
-code = """
-using System;
-public class Product
-{
-        public int code;
-        public string desc;
-
-        public Product(int c, string d)
-        {
-        code=c;
-        desc=d;
-        }
-
-}"""
-
-
-
-test= u"""[TestFixture]
-public class ProductTest
-{
-
-    [Test, Description("Prueba del Constructor")]
-    public void Constructor()
-    {
-        Product p = new Product(1,"hola");
-        Console.WriteLine(p.desc);
-        Console.WriteLine("YES!");
-
-
-        // Constraint Syntax
-        Assert.AreEqual(p.code,1);
-
-    }
-
-    [Test, Description("Public Descripción")]
-    public void Descripcion()
-    {
-        Product p = new Product(1,"hola");
-        // Constraint Syntax
-        Assert.AreEqual(p.desc,"hola");
-
-    }
-}"""
 
