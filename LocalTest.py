@@ -11,7 +11,7 @@ print os.environ['LANG']
 
 from tester.Redis_Cola import Cola, Task
 
-server = Cola("C#")
+server = Cola("csharp")
 
 code = """
 using System;
@@ -43,7 +43,7 @@ public class ProductTest
 
 
         // Constraint Syntax
-        Assert.AreEqual(p.code,1);
+        Assert.AreEqual(p.code,-1);
 
     }
 
