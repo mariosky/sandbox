@@ -10,7 +10,7 @@ import subprocess,json
 def run_test(code, test):
     try:
         code = """# -*- coding: utf-8 -*-
-        """ + code + test
+        """ + code + test_begin + test +test_end
         code = unicode(code)
         tmp_dir = tempfile.mkdtemp()
         tmp_script = open(os.path.join(tmp_dir, "script.py"),'w')
@@ -57,33 +57,8 @@ def process_error_as_json(output):
     result['successes']=  []
     return json.dumps(result)
 
-#def process_output_as_json(output):
 
-
-
-if __name__ == '__main__':
-    code = u'''
-def foo():
-    print 'hello world!'
-
-
-def solution(nums):
-    print "José"
-    if nums > 0 :
-        nums.sort()
-
-        return nums
-
-    else:
-        return []
-
-
-def hang():
-    while True:
-        pass
-'''
-
-    test = u'''
+test_begin = u"""
 import sys
 import unittest
 
@@ -97,37 +72,9 @@ class ResultadoPrueba(unittest.TestResult):
          self.success.append(test)
     def shouldStop(self, test):
          return False
+"""
 
-
-class Test(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def test_order(self):
-        self.assertEqual(solution([2,6,1,5]),[1,2,5,6])
-
-    def test_none(self):
-        self.assertEqual(solution(None),[])
-
-    #def test_hang(self):
-    #    self.assertEqual(hang(), None)
-
-class TestFoo(unittest.TestCase):
-    def test_foo(self):
-        from StringIO import StringIO
-
-        saved_stdout = sys.stdout
-        try:
-            out = StringIO()
-            sys.stdout = out
-            foo()
-            output = out.getvalue().strip()
-
-            assert output == 'hello world!'
-        finally:
-            sys.stdout = saved_stdout
-            print output
-
+test_end = u"""
 suite = unittest.TestLoader().loadTestsFromTestCase(Test)
 Resultado = ResultadoPrueba()
 suite.run(Resultado)
@@ -142,41 +89,4 @@ result['failures']=  [str(e[0]) for e in Resultado.failures]
 result['successes']=  [str(e)  for e in Resultado.success]
 print "!!!---"
 print json.dumps(result)
-'''
-
-    out = run_test(code,test)
-    print out
-
-def solution(nums):
-    if nums > 0 :
-        nums.sort()
-        #return [1,2]
-        for r in range(10):
-            print "Hola"
-        return nums
-    else:
-        return [1]
-
-
-import sys
-import unittest
-
-class ResultadoPrueba(unittest.TestResult):
-    def __init__(self):
-         super(ResultadoPrueba, self).__init__()
-         self.success = []
-    def addSuccess(self, test):
-         self.success.append(test)
-    def shouldStop(self, test):
-         return False
-
-
-class Test(unittest.TestCase):
-    def setUp(self):
-        pass
-    def test_order(self):
-        self.assertEqual(solution([2,6,1,5]),[1,2,5,6])
-    def test_none(self):
-        self.assertEqual(solution(None),[])
-
-
+"""
