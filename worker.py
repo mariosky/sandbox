@@ -4,7 +4,7 @@ from tester.Redis_Cola import Cola, Task, Worker
 import os
 
 lang = os.environ['LANG']
-server = Cola(os.environ['APP_NAME'])
+server = Cola(lang)
 worker = Worker(os.environ['HOSTNAME'], server)
 
 
@@ -12,9 +12,9 @@ worker = Worker(os.environ['HOSTNAME'], server)
 worker.send_heartbeat()
 
 
-if lang == 'Python':
+if lang == 'python':
     from tester.test_python import run_test
-elif lang == 'C#':
+elif lang == 'csharp':
     from tester.test_csharp import run_test
 
 while True:

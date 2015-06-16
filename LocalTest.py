@@ -6,18 +6,17 @@ import json
 
 
 print os.environ['REDIS_HOST']
-print os.environ['APP_NAME']
 print os.environ['LANG']
 
 from tester.Redis_Cola import Cola, Task
 
-server = Cola("C#")
+server = Cola("csharp")
 
 code = """
 using System;
 public class Product
 {
-        public int code
+        public int code;
         public string desc;
 
         public Product(int c, string d)
@@ -43,7 +42,7 @@ public class ProductTest
 
 
         // Constraint Syntax
-        Assert.AreEqual(p.code,1);
+        Assert.AreEqual(p.code,-1);
 
     }
 
@@ -61,21 +60,22 @@ public class ProductTest
 
 def put():
     task = {"id": None, "method": "exec", "params": {"code": code, "test": test}}
+    print task
     task_id = server.enqueue(**task)
     return task_id
 
 
 def get(t_id):
     t = Task(id=t_id)
-    t.get_result('C#')
+    t.get_result('csharp')
     if t.result:
         return t.result
         return json.loads( t.result[0])
     else:
         return "Snif"
 tid = put()
-
-for i in range(30):
+print tid
+for i in range(50):
     print get(tid)
 
 
