@@ -3,6 +3,8 @@ import docker
 import time
 from tester.Redis_Cola import Cola
 
+LANGS = ["csharp","python"]
+
 
 dC = docker.Client(base_url='unix://var/run/docker.sock', version="1.6", timeout=60)
 BASE_IMAGE = 'mariosky/sandbox_worker'
@@ -10,7 +12,7 @@ BASE_IMAGE = 'mariosky/sandbox_worker'
 
 
 
-def create_worker():
+def create_worker(params):
     cont = make_container()
     start(cont)
     return cont
@@ -57,10 +59,10 @@ def get_containers(image=BASE_IMAGE):
 
 if __name__ == "__main__":
     kill_all()
-    server = Cola("curso")
-    print "Init Queue"
-    server.initialize()
-    print create_worker()
+    servers = [Cola(name)for name in LANGS]
+    for s in servers:
+        print "Init Queue", s.app_name
+        print create_worker()
     print create_worker()
     time.sleep(4)
     while True:
