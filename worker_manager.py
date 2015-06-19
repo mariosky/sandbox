@@ -5,17 +5,15 @@ from tester.Redis_Cola import Cola
 
 LANGS = ["csharp","python"]
 
-
 dC = docker.Client(base_url='unix://var/run/docker.sock', version="1.6", timeout=60)
 BASE_IMAGE = 'mariosky/sandbox_worker'
 
 
-
-
-def create_worker(params):
-    cont = make_container()
-    start(cont)
-    return cont
+def create_worker(conf):
+    # TODO catch ContainerError - requests.exceptions.ConnectionError
+    container = make_container(conf)
+    start(container)
+    return container
 
 
 class ContainerException(Exception):
@@ -25,11 +23,13 @@ class ContainerException(Exception):
     """
     pass
 
+
 class ImageException(Exception):
     """
     There was some problem reading image
     """
     pass
+
 
 def get_image(image_name=BASE_IMAGE):
     # TODO catch ConnectionError - requests.exceptions.ConnectionError
@@ -40,39 +40,44 @@ def get_image(image_name=BASE_IMAGE):
     return None
 
 
-def make_container(command = "python /home/sandbox/worker.py"):
+def make_container(command="python /home/sandbox/worker.py"):
     return dC.create_container( get_image()['Id'], command=command, mem_limit=6291456, ports={"6379/tcp": {}})
 
 
 def start(cont):
     dC.start(cont['Id'], port_bindings={"6379/tcp": [{'HostIp': '', 'HostPort': ''}]})
 
+
 def kill_all(image=BASE_IMAGE):
-    for c in get_containers(image):
-        print "Killing: ", c
-        dC.kill(c)
+    for container in get_containers(image):
+        print "Killing: ", container
+        dC.kill(container)
 
 
 def get_containers(image=BASE_IMAGE):
-    return [ c['Id'][:12] for c in dC.containers() if c['Image'].split(':')[0] == image ]
+    return [ container['Id'][:12] for container in dC.containers() if container['Image'].split(':')[0] == image ]
 
 
 if __name__ == "__main__":
     kill_all()
-    servers = [Cola(name)for name in LANGS]
-    for s in servers:
-        print "Init Queue", s.app_name
-        print create_worker()
-    print create_worker()
+    colas = [Cola(name)for name in LANGS]
+    for cola in colas:
+        print "Init Queue", cola.app_name
+        print create_worker({'lang':cola.app_name})
+        print create_worker({'lang':cola.app_name})
     time.sleep(4)
     while True:
         time.sleep(1)
         containers = get_containers(BASE_IMAGE)
-        workers = [ w.split(":")[2] for w in server.get_workers()]
-        for c in containers:
-            if c not in workers:
-                print "Killing: ", c
-                dC.kill(c)
-                print create_worker()
+        workers = Cola.get_all_workers()
+        # w (0=lang;1=worker;2=id)
+        print containers
+        print workers
+
+        #for c in containers:
+        #    if c not in [w[1] for w in workers]:
+        #        print "Killing: ", c
+        #        dC.kill(c)
+        #        print create_worker({"lang":w[0]})
 
 

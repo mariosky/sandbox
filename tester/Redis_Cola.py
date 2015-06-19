@@ -70,12 +70,11 @@ class Cola:
         self.result_set = self.app_name+':result_set'
         self.worker_set = self.app_name+':worker_set'
 
-
     def initialize(self):
         r.flushall()
         r.setnx(self.task_counter,0)
 
-    def enqueue(self, **kwargs ):
+    def enqueue(self, **kwargs):
         if kwargs['id'] is None:
             kwargs['id'] = "%s:task:%s" % (self.app_name, r.incr(self.task_counter))
         t = Task(**kwargs)
@@ -97,6 +96,10 @@ class Cola:
         pattern = '%s:worker:*' % (self.app_name)
         return r.keys(pattern)
 
+    @staticmethod
+    def get_all_workers(cls):
+        pattern = '*:worker:*'
+        return r.keys(pattern)
 
 class Worker:
     def __init__(self, worker_id, cola):
