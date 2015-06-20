@@ -77,19 +77,3 @@ tid = put()
 print tid
 for i in range(50):
     print get(tid)
-
-
-#('{"successes": ["test_negativos (__main__.Test)", "test_suma_positivos (__main__.Test)"], "failures": [], "errors": [], "result": "Success", "stdout": ""}', 0)
-
-# import xml.etree.ElementTree as ET
-# tree = ET.parse('tester/TestResult.xml')
-# a = open('out.txt')
-# r = {
-#     'successes':[ e.attrib['name'] for e in  tree.findall(".//test-case[@result='Success']")],
-#     'failures':[ e.attrib['name'] for e in  tree.findall(".//test-case[@result='Failure']")],
-#     'errors': [],
-#     'stdout': a.read(),
-#     'result': tree.findall("test-suite")[0].attrib['result']
-#     }
-#
-# print json.dumps(r)

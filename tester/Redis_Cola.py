@@ -4,7 +4,6 @@ import os
 
 HOST = os.environ['REDIS_HOST']
 PORT = 6379
-APP_NAME = os.environ['LANG']
 
 WORKER_HEARTBEAT_INTERVAL = 1  #Time a worker waits for a Task before unblocking to send a heartbeat
 
@@ -62,7 +61,7 @@ class Task:
 
 
 class Cola:
-    def __init__(self, name = APP_NAME):
+    def __init__(self, name):
         self.app_name = name
         self.task_counter = self.app_name+':task_counter'
         self.pending_set = self.app_name+':pending_set'
