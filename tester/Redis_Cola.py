@@ -97,7 +97,7 @@ class Cola:
         return r.keys(pattern)
 
     @staticmethod
-    def get_all_workers(cls):
+    def get_all_workers():
         pattern = '*:worker:*'
         return r.keys(pattern)
 
