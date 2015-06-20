@@ -36,7 +36,7 @@ class ImageException(Exception):
 
 def make_container(env):
     command="python /home/sandbox/worker.py %s "
-    return dC.create_container( BASE_IMAGE, environment=env ,command=command, mem_limit=6291456, labels=['worker'] ,ports={"6379/tcp": {}})
+    return dC.create_container( BASE_IMAGE, environment=env ,command=command, mem_limit=6291456, labels={'worker':env['LANG'] } ,ports={"6379/tcp": {}})
 
 
 def start(cont):
@@ -50,7 +50,7 @@ def kill_all(image=BASE_IMAGE):
 
 
 def get_containers(label='worker'):
-    return [ container['Id'][:12] for container in dC.containers() if label in container['Labels'] ]
+    return [ (container['Labels'][label], container['Id'][:12] ) for container in dC.containers() if label in container['Labels'] ]
 
 
 if __name__ == "__main__":
@@ -69,10 +69,10 @@ if __name__ == "__main__":
         print "containers",containers
         print "workers", workers
 
-        for c in containers:
-            if c not in [w[1] for w in workers]:
-                print "Killing: ", c, w[0]
-                dC.kill(c)
-                print create_worker({'LANG':w[0], 'REDIS_HOST':os.environ['REDIS_HOST']})
+        # for c in containers:
+        #     if c not in [w[1] for w in workers]:
+        #         print "Killing: ", c, w[0]
+        #         dC.kill(c)
+        #         print create_worker({'LANG':w[0], 'REDIS_HOST':os.environ['REDIS_HOST']})
 
 
