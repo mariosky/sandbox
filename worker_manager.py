@@ -10,9 +10,9 @@ dC = docker.Client(base_url='unix://var/run/docker.sock', version="auto", timeou
 BASE_IMAGE = 'mariosky/sandbox_worker:latest'
 
 
-def create_worker(conf):
+def create_worker(env):
     # TODO catch ContainerError - requests.exceptions.ConnectionError
-    container = make_container(conf)
+    container = make_container(env)
     start(container)
     return container
 
@@ -44,7 +44,7 @@ def start(cont):
 
 
 def kill_all(image=BASE_IMAGE):
-    for container in get_containers(image):
+    for container in get_containers('worker'):
         print "Killing: ", container
         dC.kill(container)
 
