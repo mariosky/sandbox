@@ -57,7 +57,7 @@ if __name__ == "__main__":
     kill_all()
     colas = [Cola(name)for name in LANGS]
     for cola in colas:
-        print "Init Queue", cola.app_name
+        print "Init Queue:", cola.app_name
         print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST']})
         print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST']})
     time.sleep(4)
@@ -65,14 +65,10 @@ if __name__ == "__main__":
         time.sleep(1)
         containers = get_containers()
         workers = [ w.split(':worker:') for w in Cola.get_all_workers()]
-        # w (0=lang;2=id)
-        print "containers",containers
-        print "workers", workers
-
         for c_lang, c_id in containers:
-            print c_lang, c_id, [id for lang, id  in workers]
 
-            if c_id not in [id for lang, id  in workers]:
+
+            if c_id not in [w_id for w_lang, w_id  in workers]:
                 print "Killing: ", c_id, c_lang
                 dC.kill(c_id)
                 print create_worker({'LANG':c_lang, 'REDIS_HOST':os.environ['REDIS_HOST']})
