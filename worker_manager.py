@@ -70,7 +70,9 @@ if __name__ == "__main__":
         print "workers", workers
 
         for c_lang, c_id in containers:
-             if c_id not in [id for lang, id  in workers]:
+            print c_lang, c_id, [id for lang, id  in workers]
+
+            if c_id not in [id for lang, id  in workers]:
                 print "Killing: ", c_id, c_lang
                 dC.kill(c_id)
                 print create_worker({'LANG':c_lang, 'REDIS_HOST':os.environ['REDIS_HOST']})
