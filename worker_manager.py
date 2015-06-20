@@ -44,7 +44,7 @@ def start(cont):
 
 
 def kill_all(image=BASE_IMAGE):
-    for container in get_containers('worker'):
+    for lang , container in get_containers('worker'):
         print "Killing: ", container
         dC.kill(container)
 
