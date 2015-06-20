@@ -64,7 +64,7 @@ if __name__ == "__main__":
     while True:
         time.sleep(1)
         containers = get_containers()
-        workers = Cola.get_all_workers()
+        workers = [ w.split(':worker:') for w in Cola.get_all_workers()]
         # w (0=lang;1=worker;2=id)
         print containers
         print workers
