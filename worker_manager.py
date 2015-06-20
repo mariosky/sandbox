@@ -7,7 +7,7 @@ from tester.Redis_Cola import Cola
 LANGS = ["csharp","python"]
 
 dC = docker.Client(base_url='unix://var/run/docker.sock', version="1.8", timeout=60)
-BASE_IMAGE = 'mariosky/sandbox_worker'
+BASE_IMAGE = 'mariosky/sandbox_worker:latest'
 
 
 def create_worker(conf):
@@ -32,19 +32,11 @@ class ImageException(Exception):
     pass
 
 
-def get_image(image_name=BASE_IMAGE):
-    # TODO catch ConnectionError - requests.exceptions.ConnectionError
-    for image in dC.images():
-        if image['Repository'] == image_name and image['Tag'] == 'latest':
-            return image
-    raise ImageException()
-    return None
-
 
 
 def make_container(env):
     command="python /home/sandbox/worker.py %s "
-    return dC.create_container( get_image()['Id'], environment=env ,command=command, mem_limit=6291456, labels=['worker'] ,ports={"6379/tcp": {}})
+    return dC.create_container( BASE_IMAGE, environment=env ,command=command, mem_limit=6291456, labels=['worker'] ,ports={"6379/tcp": {}})
 
 
 def start(cont):
