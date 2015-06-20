@@ -65,14 +65,14 @@ if __name__ == "__main__":
         time.sleep(1)
         containers = get_containers()
         workers = [ w.split(':worker:') for w in Cola.get_all_workers()]
-        # w (0=lang;1=worker;2=id)
+        # w (0=lang;2=id)
         print containers
         print workers
 
-        #for c in containers:
-        #    if c not in [w[1] for w in workers]:
-        #        print "Killing: ", c
-        #        dC.kill(c)
-        #        print create_worker({"lang":w[0]})
+        for c in containers:
+            if c not in [w[1] for w in workers]:
+                print "Killing: ", c
+                dC.kill(c)
+                print create_worker({'LANG':w[0], 'REDIS_HOST':os.environ['REDIS_HOST']})
 
 
