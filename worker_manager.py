@@ -49,8 +49,8 @@ def kill_all(image=BASE_IMAGE):
         dC.kill(container)
 
 
-def get_containers(image=BASE_IMAGE):
-    return [ container['Id'][:12] for container in dC.containers() if container['Image'].split(':')[0] == image ]
+def get_containers(label='worker'):
+    return [ container['Id'][:12] for container in dC.containers() if label in container['Labels'] ]
 
 
 if __name__ == "__main__":
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     time.sleep(4)
     while True:
         time.sleep(1)
-        containers = get_containers(BASE_IMAGE)
+        containers = get_containers()
         workers = Cola.get_all_workers()
         # w (0=lang;1=worker;2=id)
         print containers
