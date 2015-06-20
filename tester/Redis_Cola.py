@@ -8,7 +8,7 @@ APP_NAME = os.environ['LANG']
 
 WORKER_HEARTBEAT_INTERVAL = 1  #Time a worker waits for a Task before unblocking to send a heartbeat
 
-
+#TODO: Connection Exception
 r = redis.Redis(host=HOST, port=PORT)
 
 
