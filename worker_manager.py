@@ -1,5 +1,6 @@
 
 import docker
+import os
 import time
 from tester.Redis_Cola import Cola
 
@@ -40,8 +41,10 @@ def get_image(image_name=BASE_IMAGE):
     return None
 
 
-def make_container(command="python /home/sandbox/worker.py"):
-    return dC.create_container( get_image()['Id'], command=command, mem_limit=6291456, ports={"6379/tcp": {}})
+
+def make_container(env):
+    command="python /home/sandbox/worker.py %s "
+    return dC.create_container( get_image()['Id'], environment=env ,command=command, mem_limit=6291456, ports={"6379/tcp": {}})
 
 
 def start(cont):
@@ -63,8 +66,8 @@ if __name__ == "__main__":
     colas = [Cola(name)for name in LANGS]
     for cola in colas:
         print "Init Queue", cola.app_name
-        print create_worker({'lang':cola.app_name})
-        print create_worker({'lang':cola.app_name})
+        print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['HOSTNAME']})
+        print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['HOSTNAME']})
     time.sleep(4)
     while True:
         time.sleep(1)
