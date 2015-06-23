@@ -22,7 +22,7 @@ def run_test(code, test, type=None):
         result = [],0
 
 
-        tmp_test = open(os.path.join(tmp_dir, "%sTest.class" % java_class ),'w')
+        tmp_test = open(os.path.join(tmp_dir, "%sTest.java" % java_class ),'w')
         tmp_test.write(test.encode('utf8'))
         tmp_test.close()
 
