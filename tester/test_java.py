@@ -50,6 +50,7 @@ def run_test(code, test, type=None):
         #TEST
         try:
             out = subprocess.check_output(['java','-cp', '%s:/usr/share/java/junit4.jar' % tmp_dir ,'org.junit.runner.JUnitCore',os.path.join(tmp_dir, "%sTest" % java_class)], stderr=subprocess.STDOUT)
+            result = (out,0)
         except subprocess.CalledProcessError , e:
             result =  (result, e.returncode)
         finally:
