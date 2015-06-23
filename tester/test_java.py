@@ -11,7 +11,7 @@ def run_test(code, test, type=None):
     try:
         java_class = test[2:test.index('\n')-len('Test')]
         code = unicode(code)
-        test = unicode(code)
+        test = unicode(test)
 
 
         tmp_dir = tempfile.mkdtemp()
