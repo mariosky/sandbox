@@ -54,6 +54,7 @@ def run_test(code, test, type=None):
             print 'Test Out',out
         except subprocess.CalledProcessError , e:
             result =  (result, e.returncode)
+            print e
         finally:
             shutil.rmtree(tmp_dir)
 
