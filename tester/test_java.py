@@ -48,7 +48,6 @@ def run_test(code, test, type=None):
         #TEST
         try:
             out = subprocess.check_output(['java','-cp', '%s:/usr/share/java/junit4.jar' % tmp_dir ,'org.junit.runner.JUnitCore', "%sTest" % java_class], stderr=subprocess.STDOUT)
-            print out
             result = (process_out_as_json(out),0)
         except subprocess.CalledProcessError , e:
             result = process_error_as_json(e.output), e.returncode
@@ -62,13 +61,30 @@ def run_test(code, test, type=None):
 def process_out_as_json(output):
     # La salida de STDOUT estara primero
     # Extraerla y agregarla al json out
-
+    stdout = []
+    res = []
     if output:
-        out_list = output.split("!!!---\n")
-        stdout = out_list[0]
-        output_temp = json.loads(out_list[1])
-        output_temp["stdout"] = stdout
-        return json.dumps(output_temp)
+        for l in output.split('\n'):
+            if len(l) >0:
+                if  l.startswith('JUnit'):
+                    res.append(l)
+                    continue
+                if l.startswith('.'):
+                    no_dots = re.sub(r'^\.*', '', l)
+                    stdout.append(no_dots)
+                    continue
+                if l.startswith('Time') or l.startswith('OK'):
+                    stdout.append(l)
+                    continue
+                stdout.append(l)
+    result = {}
+    result['result'] = "Success"
+    result['errors']=  res
+    result['failures']=  []
+    result['successes']=  []
+    result['stdout']=  stdout
+    return json.dumps(result)
+
 
 def process_error_as_json(output):
     res = []
@@ -84,8 +100,6 @@ def process_error_as_json(output):
                     res.append(no_dots)
                     continue
                 res.append(l)
-
-
     result = {}
     result['result'] = "ProcessError"
     result['errors']=  res
