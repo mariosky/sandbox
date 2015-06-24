@@ -90,10 +90,12 @@ def process_error_as_json(output):
 test =r"""//CalculatorTest
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import System;
 
 public class CalculatorTest {
   @Test
   public void evaluatesExpression() {
+    System.out.println("Hello, World");
     Calculator calculator = new Calculator();
     int sum = calculator.evaluate("1+2+3");
     assertEquals(6, sum);
