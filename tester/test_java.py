@@ -5,7 +5,7 @@ import os
 import tempfile
 import subprocess
 import json
-
+import re
 
 def run_test(code, test, type=None):
     try:
@@ -76,6 +76,10 @@ def process_error_as_json(output):
             if len(l)>0:
                 if  l.startswith('JUnit'):
                     res.append(l)
+                    break
+                if l.startswith('.'):
+                    no_dots = re.sub('[.]', '', l)
+                    re.append(no_dots)
                     break
 
     result = {}
