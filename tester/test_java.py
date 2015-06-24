@@ -57,8 +57,8 @@ def run_test(code, test, type=None):
             result =  (result, e.returncode)
             print e
         finally:
-            shutil.rmtree(tmp_dir)
-
+            #shutil.rmtree(tmp_dir)
+            pass
         return result
     except Exception, e:
         return ["Error, could not evaluate"], e
