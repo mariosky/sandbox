@@ -76,13 +76,12 @@ def process_error_as_json(output):
             if len(l)>0:
                 if  l.startswith('JUnit'):
                     res.append(l)
+                    continue
 
                 if l.startswith('.'):
-                    print l
-
                     no_dots = re.sub(r'^\.*', '', l)
-                    print no_dots
                     res.append(no_dots)
+                    continue
 
 
     result = {}
