@@ -170,5 +170,5 @@ java.lang.AssertionError: expected:<6> but was:<-6>
 FAILURES!!!
 Tests run: 1,  Failures: 1"""
 
-
+print run_test(code,test)
 #print process_error_as_json(output)
