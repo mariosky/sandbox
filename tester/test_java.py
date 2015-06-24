@@ -44,6 +44,7 @@ def run_test(code, test, type=None):
             print 'Compile Test',result
         except subprocess.CalledProcessError , e:
             result = (json.dumps({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"}),e.returncode)
+            print e
             return result
 
 
