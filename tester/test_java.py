@@ -31,7 +31,6 @@ def run_test(code, test, type=None):
         #COMPILE Program
         try:
             out = subprocess.check_output(['javac',os.path.join(tmp_dir,"%s.java" % java_class)], stderr=subprocess.STDOUT)
-            print 'Compile',result
             result = (out,0)
         except subprocess.CalledProcessError , e:
             result = (json.dumps({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"}),e.returncode)
@@ -41,27 +40,48 @@ def run_test(code, test, type=None):
         try:
             out = subprocess.check_output(['javac','-cp','%s:/usr/share/java/junit4.jar' % tmp_dir, os.path.join(tmp_dir, "%sTest.java" % java_class)], stderr=subprocess.STDOUT)
             result = (out,0)
-            print 'Compile Test',result
         except subprocess.CalledProcessError , e:
             result = (json.dumps({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"}),e.returncode)
-            print e
             return result
 
 
         #TEST
         try:
             out = subprocess.check_output(['java','-cp', '%s:/usr/share/java/junit4.jar' % tmp_dir ,'org.junit.runner.JUnitCore', "%sTest" % java_class], stderr=subprocess.STDOUT)
-            result = (out,0)
-            print 'Test Out',out
+            result = (process_out_as_json(out),0)
         except subprocess.CalledProcessError , e:
-            result =  (result, e.returncode)
-            print e
+            result = process_error_as_json(e.output), e.returncode
         finally:
-            #shutil.rmtree(tmp_dir)
-            pass
+            shutil.rmtree(tmp_dir)
         return result
     except Exception, e:
         return ["Error, could not evaluate"], e
+
+
+def process_out_as_json(output):
+    # La salida de STDOUT estara primero
+    # Extraerla y agregarla al json out
+
+    if output:
+        out_list = output.split("!!!---\n")
+        stdout = out_list[0]
+        output_temp = json.loads(out_list[1])
+        output_temp["stdout"] = stdout
+        return json.dumps(output_temp)
+
+def process_error_as_json(output):
+    res = []
+    if output:
+        for l in output.split('\n'):
+            if len(l)>0  and l[:3] != '===' and l[:3] != '---' and 'Traceback' not in l and l[:2] != '  ':
+                res.append(l)
+
+    result = {}
+    result['result'] = "ProcessError"
+    result['errors']=  res
+    result['failures']=  []
+    result['successes']=  []
+    return json.dumps(result)
 
 
 
@@ -86,7 +106,7 @@ public class Calculator {
   public int evaluate(String expression) {
     int sum = 0;
     for (String summand: expression.split("\\+"))
-      sum += Integer.valueOf(summand);
+      sum -= Integer.valueOf(summand);
     return sum;
   }
 }"""
