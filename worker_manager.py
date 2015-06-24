@@ -4,7 +4,7 @@ import os
 import time
 from tester.Redis_Cola import Cola
 
-LANGS = ["csharp","python"]
+LANGS = ["csharp","python","java"]
 
 dC = docker.Client(base_url='unix://var/run/docker.sock', version="auto", timeout=60)
 BASE_IMAGE = 'mariosky/sandbox_worker:latest'

@@ -16,6 +16,9 @@ if lang == 'python':
     from tester.test_python import run_test
 elif lang == 'csharp':
     from tester.test_csharp import run_test
+if lang == 'java':
+    from tester.test_java import run_test
+
 
 while True:
     t = worker.pull_task()
