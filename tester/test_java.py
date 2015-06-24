@@ -73,8 +73,10 @@ def process_error_as_json(output):
     res = []
     if output:
         for l in output.split('\n'):
-            if len(l)>0  and l[:3] != '===' and l[:3] != '---' and 'Traceback' not in l and l[:2] != '  ':
-                res.append(l)
+            if len(l)>0:
+                if  l.startswith('JUnit'):
+                    res.append(l)
+                    break
 
     result = {}
     result['result'] = "ProcessError"
