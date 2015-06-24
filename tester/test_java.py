@@ -78,7 +78,7 @@ def process_error_as_json(output):
                     res.append(l)
                     break
                 if l.startswith('.'):
-                    no_dots = re.sub('[.]', '', l)
+                    no_dots = re.sub(r'[\.*]', '', l)
                     re.append(no_dots)
                     break
 
