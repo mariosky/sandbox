@@ -48,6 +48,7 @@ def run_test(code, test, type=None):
         #TEST
         try:
             out = subprocess.check_output(['java','-cp', '%s:/usr/share/java/junit4.jar' % tmp_dir ,'org.junit.runner.JUnitCore', "%sTest" % java_class], stderr=subprocess.STDOUT)
+            print out
             result = (process_out_as_json(out),0)
         except subprocess.CalledProcessError , e:
             result = process_error_as_json(e.output), e.returncode
