@@ -90,7 +90,6 @@ def process_error_as_json(output):
 test =r"""//CalculatorTest
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import System;
 
 public class CalculatorTest {
   @Test
