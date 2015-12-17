@@ -47,6 +47,7 @@ def kill_all(image=BASE_IMAGE):
     for lang , container in get_containers('worker'):
         print "Killing: ", container
         dC.kill(container)
+        dC.remove_container(container)
 
 
 def get_containers(label='worker'):
