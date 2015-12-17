@@ -51,7 +51,7 @@ def kill_all(image=BASE_IMAGE):
 
 
 def get_containers(label='worker'):
-    return [ (container['Labels'][label], container['Id'][:12] ) for container in dC.containers() if label in container['Labels'] ]
+    return [ (container['Labels'][label], container['Id'][:12] ) for container in dC.containers(all=True) if label in container['Labels'] ]
 
 
 if __name__ == "__main__":
