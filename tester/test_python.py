@@ -91,20 +91,3 @@ print "!!!---"
 print json.dumps(result)
 """
 
-# Funcion que suma dos números
-code="""
-def suma():
-    pass
-print "A"
-"""
-test="""
-class Test(unittest.TestCase):
-    def setUp(self):
-        pass
-    def test_suma_positivos(self):
-        self.assertEqual(suma(3,9),12)
-    def test_negativos(self):
-        self.assertEqual(suma(5,-12),-7)
-"""
-
-print run_test(code, test)
