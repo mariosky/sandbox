@@ -90,4 +90,3 @@ result['successes']=  [str(e)  for e in Resultado.success]
 print "!!!---"
 print json.dumps(result)
 """
-
