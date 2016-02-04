@@ -37,7 +37,7 @@ def process_out_as_json(output):
     # Extraerla y agregarla al json out
 
     if output:
-        out_list = output.split("!!!---\n")
+        out_list = output.split("\n")
         stdout = out_list[0]
         output_temp = json.loads(out_list[1])
         output_temp["stdout"] = stdout
@@ -90,3 +90,21 @@ result['successes']=  [str(e)  for e in Resultado.success]
 print "!!!---"
 print json.dumps(result)
 """
+
+# Funcion que suma dos números
+code="""
+def suma():
+    pass
+print "A"
+"""
+test="""
+class Test(unittest.TestCase):
+    def setUp(self):
+        pass
+    def test_suma_positivos(self):
+        self.assertEqual(suma(3,9),12)
+    def test_negativos(self):
+        self.assertEqual(suma(5,-12),-7)
+"""
+
+print run_test(code, test)
