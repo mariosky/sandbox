@@ -2,11 +2,42 @@
 import docker
 import os
 import time
+import sys, getopt
+
 from tester.Redis_Cola import Cola
 
 LANGS = ["csharp","python","java"]
 
-dC = docker.Client(base_url='unix://var/run/docker.sock', version="auto", timeout=60)
+argv =sys.argv[1:]
+ip = ""
+dC = None
+
+if argv:
+    try:
+        opts, args = getopt.getopt(argv,"i:",["ip="])
+    except getopt.GetoptError:
+        print 'test.py -i <ip>'
+        sys.exit(2)
+
+    ip = opts[0][1]
+    import docker.tls as tls
+    from os import path
+
+    CERTS = path.join(path.expanduser('~'), '.docker', 'machine', 'machines', 'sandmanbox')
+
+    tls_config = tls.TLSConfig(
+        client_cert=(path.join(CERTS, 'cert.pem'), path.join(CERTS,'key.pem')),
+        ca_cert=path.join(CERTS, 'ca.pem'),
+        verify=True
+        )
+    dC = docker.Client(base_url='https://'+ip+':2376', tls=tls_config)
+else:
+    dC = docker.Client(base_url='unix://var/run/docker.sock', version="auto", timeout=60)
+
+
+
+
+
 BASE_IMAGE = 'mariosky/sandbox_worker:latest'
 
 
