@@ -30,7 +30,7 @@ if argv:
         ca_cert=path.join(CERTS, 'ca.pem'),
         verify=True
         )
-    dC = docker.Client(base_url='https://'+ip+':2376', tls=tls_config)
+    dC = docker.Client(base_url='https://sandman:2376', tls=tls_config)
 else:
     dC = docker.Client(base_url='unix://var/run/docker.sock', version="auto", timeout=60)
 
@@ -63,11 +63,12 @@ class ImageException(Exception):
     pass
 
 
-
+#memlimit moved
+#mem_limit=6291456,
 
 def make_container(env):
     command="python /home/sandbox/worker.py %s "
-    return dC.create_container( BASE_IMAGE, environment=env ,command=command, mem_limit=6291456, labels={'worker':env['LANG'] } ,ports={"6379/tcp": {}})
+    return dC.create_container( BASE_IMAGE, environment=env ,command=command,  labels={'worker':env['LANG'] } ,ports={"6379/tcp": {}})
 
 
 def start(cont):
