@@ -3,7 +3,7 @@ import redis
 import os
 
 HOST = os.environ['REDIS_HOST']
-PORT = 6379
+PORT = 6666
 
 WORKER_HEARTBEAT_INTERVAL = 1  #Time a worker waits for a Task before unblocking to send a heartbeat
 
