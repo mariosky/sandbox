@@ -75,19 +75,27 @@ def start(cont):
     dC.start(cont['Id'], port_bindings={"6666/tcp": [{'HostIp': '', 'HostPort': ''}]})
 
 
-def kill_all(image=BASE_IMAGE):
+def kill_all():
     for lang , container in get_containers('worker'):
         print "Killing: ", container
         dC.kill(container)
+
+
+def remove_all():
+    for lang , container in get_containers('worker', all=True):
+        print "Removing: ", container
         dC.remove_container(container)
 
 
-def get_containers(label='worker'):
-    return [ (container['Labels'][label], container['Id'][:12] ) for container in dC.containers(all=True) if label in container['Labels'] ]
+def get_containers(label='worker', all=False):
+    return [ (container['Labels'][label], container['Id'][:12] ) for container in dC.containers(all=all) if label in container['Labels'] ]
+
+
 
 
 if __name__ == "__main__":
     kill_all()
+    remove_all()
     colas = [Cola(name)for name in LANGS]
     for cola in colas:
         print "Init Queue:", cola.app_name
@@ -104,6 +112,9 @@ if __name__ == "__main__":
             if c_id not in [w_id for w_lang, w_id  in workers]:
                 print "Killing: ", c_id, c_lang
                 dC.kill(c_id)
+                dC.remove_container(c_id)
+                print "Removing: ", c_id
+
                 print create_worker({'LANG':c_lang, 'REDIS_HOST':os.environ['REDIS_HOST']})
 
 
