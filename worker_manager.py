@@ -93,7 +93,7 @@ if __name__ == "__main__":
         print "Init Queue:", cola.app_name
         print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST']})
         print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST']})
-    time.sleep(4)
+        time.sleep(4)
     while True:
         time.sleep(1)
         containers = get_containers()
