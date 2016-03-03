@@ -68,11 +68,11 @@ class ImageException(Exception):
 
 def make_container(env):
     command="python /home/sandbox/worker.py %s "
-    return dC.create_container( BASE_IMAGE, environment=env ,command=command,  labels={'worker':env['LANG'] } ,ports={"6379/tcp": {}})
+    return dC.create_container( BASE_IMAGE, environment=env ,command=command,  labels={'worker':env['LANG'] } ,ports={"6666/tcp": {}})
 
 
 def start(cont):
-    dC.start(cont['Id'], port_bindings={"6379/tcp": [{'HostIp': '', 'HostPort': ''}]})
+    dC.start(cont['Id'], port_bindings={"6666/tcp": [{'HostIp': '', 'HostPort': ''}]})
 
 
 def kill_all(image=BASE_IMAGE):
