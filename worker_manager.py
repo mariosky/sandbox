@@ -10,34 +10,8 @@ LANGS = ["csharp","python","java"]
 
 argv =sys.argv[1:]
 ip = ""
-dC = None
 
-if argv:
-    try:
-        opts, args = getopt.getopt(argv,"i:",["ip="])
-    except getopt.GetoptError:
-        print 'test.py -i <ip>'
-        sys.exit(2)
-
-    ip = opts[0][1]
-    import docker.tls as tls
-    from os import path
-
-    CERTS = path.join(path.expanduser('~'), '.docker', 'machine', 'machines', 'sandmanbox')
-
-    tls_config = tls.TLSConfig(
-        client_cert=(path.join(CERTS, 'cert.pem'), path.join(CERTS,'key.pem')),
-        ca_cert=path.join(CERTS, 'ca.pem'),
-        verify=True
-        )
-    dC = docker.Client(base_url='https://sandman:2376', tls=tls_config)
-else:
-    dC = docker.Client(base_url='unix://var/run/docker.sock', version="auto", timeout=60)
-
-
-
-
-
+dC = docker.Client(base_url='unix://var/run/docker.sock', version="auto", timeout=60)
 BASE_IMAGE = 'mariosky/sandbox_worker:latest'
 
 
@@ -68,7 +42,7 @@ class ImageException(Exception):
 
 def make_container(env):
     command="python /home/sandbox/worker.py %s "
-    return dC.create_container( BASE_IMAGE, environment=env ,command=command,  labels={'worker':env['LANG'] } ,ports={"6666/tcp": {}})
+    return dC.create_container( BASE_IMAGE, environment=env ,command=command,  labels={'worker':env['LANG'] } ,ports={os.environ['REDIS_PORT']: {}})
 
 
 def start(cont):
