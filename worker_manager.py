@@ -72,7 +72,10 @@ def make_container(env):
 
 
 def start(cont):
-    dC.start(cont['Id'], port_bindings={"6666/tcp": [{'HostIp': '', 'HostPort': ''}]})
+#   dC.start(cont['Id'], port_bindings={"6666/tcp": [{'HostIp': '', 'HostPort': ''}]})
+    dC.start(cont['Id'])
+
+
 
 
 def kill_all():
