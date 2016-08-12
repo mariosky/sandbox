@@ -10,7 +10,7 @@ print os.environ['LANG']
 
 from tester.Redis_Cola import Cola, Task
 
-server = Cola("python")
+server = Cola("csharp")
 
 code = """
 using System;
@@ -67,7 +67,7 @@ def put():
 
 def get(t_id):
     t = Task(id=t_id)
-    t.get_result('python')
+    t.get_result('csharp')
     if t.result:
         return t.result
         return json.loads( t.result[0])
@@ -76,5 +76,5 @@ def get(t_id):
 tid = put()
 print tid
 
-for i in range(50):
+for i in range(500):
     print get(tid)
