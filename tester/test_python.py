@@ -6,7 +6,6 @@ import shutil, os, tempfile
 import subprocess,json
 
 
-
 def run_test(code, test):
     try:
         code = """# -*- coding: utf-8 -*-
