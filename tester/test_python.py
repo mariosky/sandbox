@@ -10,6 +10,7 @@ import subprocess,json
 def run_test(code, test):
     try:
         code = """# -*- coding: utf-8 -*-
+
         """ + code + test_begin + test +test_end
         code = unicode(code)
         tmp_dir = tempfile.mkdtemp()
