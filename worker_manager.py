@@ -76,8 +76,9 @@ if __name__ == "__main__":
     colas = [Cola(name)for name in LANGS]
     for cola in colas:
         print "Init Queue:", cola.app_name
-        print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST']})
-        print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST']})
+        print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
+        print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
+
         time.sleep(4)
     while True:
         time.sleep(1)
