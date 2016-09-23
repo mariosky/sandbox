@@ -42,7 +42,8 @@ class ImageException(Exception):
 
 def make_container(env):
     command="python /home/sandbox/worker.py %s "
-    return dC.create_container( BASE_IMAGE, environment=env ,command=command,  labels={'worker':env['LANG'] } ,ports={os.environ['REDIS_PORT']: {}})
+    return dC.create_container( BASE_IMAGE, environment=env ,command=command,  labels={'worker':env['LANG'] } ,
+                                ports={os.environ['REDIS_PORT']: {}})
 
 
 def start(cont):
