@@ -10,7 +10,6 @@ def run_test(code, test):
     try:
 
         code = """# -*- coding: utf-8 -*-\n""" +  code + test_begin + test +test_end
-        print code
         code = unicode(code)
         tmp_dir = tempfile.mkdtemp()
         tmp_script = open(os.path.join(tmp_dir, "script.py"),'w')
