@@ -10,51 +10,32 @@ print os.environ['LANG']
 
 from tester.Redis_Cola import Cola, Task
 
-server = Cola("csharp")
+server = Cola("python")
 
-code = """
-using System;
-public class Product
-{
-        public int code;
-        public string desc;
-
-        public Product(int c, string d)
-        {
-        code=c;
-        desc=d;
-        }
-
-}"""
+code = """def producto(l1,l2):
+    pass"""
 
 
 
-test= u"""[TestFixture]
-public class ProductTest
-{
+test= u"""import sys
+import unittest
+import json
 
-    [Test, Description("Prueba del Constructor")]
-    public void Constructor()
-    {
-        Product p = new Product(1,"hola");
-        Console.WriteLine(p.desc);
-        Console.WriteLine("YES!");
+class ResultadoPrueba(unittest.TestResult):
+    def __init__(self):
+         super(ResultadoPrueba, self).__init__()
+         self.success = []
+    def addSuccess(self, test):
+         self.success.append(test)
+    def shouldStop(self, test):
+         return False
 
 
-        // Constraint Syntax
-        Assert.AreEqual(p.code,-1);
-
-    }
-
-    [Test, Description("Public Descripción")]
-    public void Descripcion()
-    {
-        Product p = new Product(1,"hola");
-        // Constraint Syntax
-        Assert.AreEqual(p.desc,"hola");
-
-    }
-}"""
+class Test(unittest.TestCase):
+    def setUp(self):
+        pass
+    def test_Action(self):
+        self.assertEqual(producto([2, 1, 3], [2, 3, 1]), 10)"""
 
 
 
@@ -67,7 +48,7 @@ def put():
 
 def get(t_id):
     t = Task(id=t_id)
-    t.get_result('csharp')
+    t.get_result('python')
     if t.result:
         return t.result
         return json.loads( t.result[0])
