@@ -92,7 +92,6 @@ if __name__ == "__main__":
                 dC.kill(c_id)
                 dC.remove_container(c_id)
                 print "Removing: ", c_id
-
-                print create_worker({'LANG':c_lang, 'REDIS_HOST':os.environ['REDIS_HOST']})
+                print create_worker({'LANG':c_lang, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
 
 
