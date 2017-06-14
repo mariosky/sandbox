@@ -20,7 +20,7 @@ def run_test(code, test, type=None):
 
         #COMPILE
         try:
-            out = subprocess.check_output(['mcs',os.path.join(tmp_dir, "ProgramTest.cs"),  '/pkg:nunit',  '-target:library'], stderr=subprocess.STDOUT)
+            out = subprocess.check_output(['mcs',os.path.join(tmp_dir, "ProgramTest.cs"),  '-r:/home/nunit.framework.dll',  '-target:library'], stderr=subprocess.STDOUT)
             result = (out,0)
         except subprocess.CalledProcessError , e:
             result = (json.dumps({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"}),e.returncode)

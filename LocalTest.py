@@ -13,7 +13,7 @@ from redis_cola import Cola, Task
 server = Cola("python")
 
 code = """def producto(l1,l2):
-    pass"""
+    return 11"""
 
 
 
@@ -51,11 +51,12 @@ def get(t_id):
     t.get_result('python')
     if t.result:
         return t.result
-        return json.loads( t.result[0])
+        #return json.loads( t.result[0])
     else:
         return "Snif"
+
+
 tid = put()
 print tid
-time.sleep(4)
-for i in range(500):
-    print get(tid)
+time.sleep(2)
+print get(tid)

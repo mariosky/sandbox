@@ -6,13 +6,13 @@ import docker
 
 from redis_cola import Cola
 
-LANGS = ["csharp","python","java"]
+LANGS = ["csharp"]
 
 argv =sys.argv[1:]
 ip = ""
 
 dC = docker.DockerClient(base_url='unix://var/run/docker.sock', version="auto", timeout=60)
-BASE_IMAGE = 'mariosky/sandbox_worker:latest'
+BASE_IMAGE = 'mariosky/csharp_tester:latest'
 
 
 def create_worker(env):
