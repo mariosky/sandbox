@@ -1,4 +1,5 @@
 import os
+import importlib
 
 from redis_cola import Cola, Worker
 
@@ -11,14 +12,8 @@ worker = Worker(os.environ['HOSTNAME'], server)
 worker.send_heartbeat()
 
 
-if lang == 'python':
-    from tester.test_python import run_test
-elif lang == 'csharp':
-    from tester.test_csharp import run_test
-if lang == 'java':
-    from tester.test_java import run_test
-
-
+tester_module =  'tester.test_%s' % lang
+tester = importlib.import_module(tester_module)
 
 while True:
     t = worker.pull_task()
@@ -27,7 +22,7 @@ while True:
         code = t.params['code']
         test = t.params['test']
         worker.send_heartbeat() #About to start working
-        t.result = run_test(code,test)
+        t.result = tester.run_test(code,test)
         t.put_result(worker)
     else:
         pass
