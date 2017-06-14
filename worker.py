@@ -1,6 +1,6 @@
 import os
 
-from lib.Redis_Cola import Cola, Worker
+from redis_cola import Cola, Worker
 
 lang = os.environ['LANG']
 server = Cola(lang)
@@ -17,6 +17,7 @@ elif lang == 'csharp':
     from tester.test_csharp import run_test
 if lang == 'java':
     from tester.test_java import run_test
+
 
 
 while True:

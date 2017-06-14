@@ -4,21 +4,21 @@ import time
 
 import docker
 
-from lib.Redis_Cola import Cola
+from redis_cola import Cola
 
 LANGS = ["csharp","python","java"]
 
 argv =sys.argv[1:]
 ip = ""
 
-dC = docker.Client(base_url='unix://var/run/docker.sock', version="auto", timeout=60)
+dC = docker.DockerClient(base_url='unix://var/run/docker.sock', version="auto", timeout=60)
 BASE_IMAGE = 'mariosky/sandbox_worker:latest'
 
 
 def create_worker(env):
     # TODO catch ContainerError - requests.exceptions.ConnectionError
     container = make_container(env)
-    start(container)
+    container.start()
     return container
 
 
@@ -42,8 +42,7 @@ class ImageException(Exception):
 
 def make_container(env):
     command="python /home/sandbox/worker.py %s "
-    return dC.create_container( BASE_IMAGE, environment=env ,command=command,  labels={'worker':env['LANG'] } ,
-                                ports={os.environ['REDIS_PORT']: {}})
+    return dC.containers.create( BASE_IMAGE, environment=env ,command=command,  labels={'worker':env['LANG'] })
 
 
 def start(cont):
@@ -54,21 +53,20 @@ def start(cont):
 
 
 def kill_all():
-    for lang , container in get_containers('worker'):
+    for container in get_containers('worker'):
         print "Killing: ", container
-        dC.kill(container)
+        container.kill(container)
 
 
 def remove_all():
-    for lang , container in get_containers('worker', all=True):
+    for container in get_containers('worker', all=True):
         print "Removing: ", container
-        dC.remove_container(container)
+        container.remove()
+
 
 
 def get_containers(label='worker', all=False):
-    return [ (container['Labels'][label], container['Id'][:12] ) for container in dC.containers(all=all) if label in container['Labels'] ]
-
-
+    return dC.containers.list(all=all, filters={'label': label})
 
 
 if __name__ == "__main__":

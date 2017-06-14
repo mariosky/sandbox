@@ -3,11 +3,12 @@ __author__ = 'mariosky'
 
 import json
 import os
+import time
 
 print os.environ['REDIS_HOST']
 print os.environ['LANG']
 
-from lib.Redis_Cola import Cola, Task
+from redis_cola import Cola, Task
 
 server = Cola("python")
 
@@ -55,6 +56,6 @@ def get(t_id):
         return "Snif"
 tid = put()
 print tid
-
+time.sleep(4)
 for i in range(500):
     print get(tid)
