@@ -1,7 +1,6 @@
-from tester.Redis_Cola import Cola, Task, Worker
-
-
 import os
+
+from lib.Redis_Cola import Cola, Worker
 
 lang = os.environ['LANG']
 server = Cola(lang)

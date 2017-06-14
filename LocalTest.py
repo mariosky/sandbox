@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 __author__ = 'mariosky'
 
-import os
 import json
-
+import os
 
 print os.environ['REDIS_HOST']
 print os.environ['LANG']
 
-from tester.Redis_Cola import Cola, Task
+from lib.Redis_Cola import Cola, Task
 
 server = Cola("python")
 

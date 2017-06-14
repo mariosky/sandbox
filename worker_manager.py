@@ -1,10 +1,10 @@
+import os
+import sys
+import time
 
 import docker
-import os
-import time
-import sys, getopt
 
-from tester.Redis_Cola import Cola
+from lib.Redis_Cola import Cola
 
 LANGS = ["csharp","python","java"]
 
