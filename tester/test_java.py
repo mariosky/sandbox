@@ -38,7 +38,7 @@ def run_test(code, test, type=None):
 
         #COMPILE Test
         try:
-            out = subprocess.check_output(['javac','-cp','%s:/usr/share/java/junit4.jar' % tmp_dir, os.path.join(tmp_dir, "%sTest.java" % java_class)], stderr=subprocess.STDOUT)
+            out = subprocess.check_output(['javac','-cp','%s:/usr/share/java/junit.jar' % tmp_dir, os.path.join(tmp_dir, "%sTest.java" % java_class)], stderr=subprocess.STDOUT)
             result = (out,0)
         except subprocess.CalledProcessError , e:
             result = (json.dumps({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"}),e.returncode)
@@ -47,7 +47,7 @@ def run_test(code, test, type=None):
 
         #TEST
         try:
-            out = subprocess.check_output(['java','-cp', '%s:/usr/share/java/junit4.jar' % tmp_dir ,'org.junit.runner.JUnitCore', "%sTest" % java_class], stderr=subprocess.STDOUT)
+            out = subprocess.check_output(['java','-cp', '%s:/usr/share/java/junit.jar' % tmp_dir ,'org.junit.runner.JUnitCore', "%sTest" % java_class], stderr=subprocess.STDOUT)
             result = (process_out_as_json(out),0)
         except subprocess.CalledProcessError , e:
             result = process_error_as_json(e.output), e.returncode

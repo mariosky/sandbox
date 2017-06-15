@@ -42,12 +42,6 @@ def make_container(env):
     return dC.containers.create( BASE_IMAGE+'/'+env['LANG']+'_tester:latest', environment=env ,command=command,  labels={'worker':env['LANG'] })
 
 
-def start(cont):
-    dC.start(cont['Id'])
-
-
-
-
 def kill_all():
     for container in get_containers('worker'):
         print "Killing: ", container
@@ -73,13 +67,17 @@ if __name__ == "__main__":
     for (cola, number)  in colas:
         print "Init Queue:", cola.app_name
         for i in range(number):
-            print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
+            create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
             print {'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']}
         time.sleep(4)
     while True:
         time.sleep(1)
         containers = get_containers()
+        print containers
+
         workers = [ w.split(':worker:') for w in Cola.get_all_workers()]
+
+        print workers
         for container in containers:
             if container.short_id not in [w_id for w_lang, w_id  in workers]:
                 print "Killing: ", container.short_id

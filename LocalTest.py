@@ -58,5 +58,8 @@ def get(t_id):
 
 tid = put()
 print tid
-time.sleep(2)
+time.sleep(4)
 print get(tid)
+
+
+

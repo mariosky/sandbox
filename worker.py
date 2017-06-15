@@ -6,6 +6,9 @@ from redis_cola import Cola, Worker
 lang = os.environ['LANG']
 server = Cola(lang)
 
+print lang
+print server
+
 #Only the send the short uuid not all the HOSTNAME
 worker = Worker(os.environ['HOSTNAME'][:10], server)
 
