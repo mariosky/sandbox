@@ -1,8 +1,8 @@
 
 
 workers = [
-    ("csharp",2),
-    ("python", 2),
+    #("csharp",2),
+    #("python", 2),
     ("java", 1),
 ]
 

@@ -12,8 +12,8 @@ server = Cola("java")
 
 
 test =r"""//CalculatorTest
-import junit.Assert.assertEquals;
-import junit.Test;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 public class CalculatorTest {
   @Test
