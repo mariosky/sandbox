@@ -4,6 +4,8 @@ import time
 
 import docker
 
+print docker.version
+
 from redis_cola import Cola
 
 LANGS = ["csharp"]
@@ -55,7 +57,7 @@ def start(cont):
 def kill_all():
     for container in get_containers('worker'):
         print "Killing: ", container
-        container.kill(container)
+        container.kill()
 
 
 def remove_all():
@@ -77,20 +79,26 @@ if __name__ == "__main__":
         print "Init Queue:", cola.app_name
         print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
         print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
+        print {'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']}
 
         time.sleep(4)
     while True:
         time.sleep(1)
         containers = get_containers()
         workers = [ w.split(':worker:') for w in Cola.get_all_workers()]
-        for c_lang, c_id in containers:
+        print workers
+        print containers
+        for container in containers:
 
 
-            if c_id not in [w_id for w_lang, w_id  in workers]:
-                print "Killing: ", c_id, c_lang
-                dC.kill(c_id)
-                dC.remove_container(c_id)
-                print "Removing: ", c_id
-                print create_worker({'LANG':c_lang, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
+            if container.id not in [w_id for w_lang, w_id  in workers]:
+                print "Killing: ", container.id
+                print container.attrs
+                print container.attrs[u'Config']['Labels']
+                container.kill()
+                container.remove()
+                print "Removing: ", container.id
+                print create_worker({'LANG':container.labels['worker'], 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
+                time.sleep(4)
 
 
