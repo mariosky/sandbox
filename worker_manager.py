@@ -7,17 +7,15 @@ import docker
 print docker.version
 
 from redis_cola import Cola
+from settings import *
 
-LANGS = ["csharp"]
 
-argv =sys.argv[1:]
-ip = ""
 
 dC = docker.DockerClient(base_url='unix://var/run/docker.sock', version="auto", timeout=60)
-BASE_IMAGE = 'mariosky/csharp_tester:latest'
 
 
-def create_worker(env):
+
+def create_worker(env ):
     # TODO catch ContainerError - requests.exceptions.ConnectionError
     container = make_container(env)
     container.start()
@@ -39,16 +37,12 @@ class ImageException(Exception):
     pass
 
 
-#memlimit moved
-#mem_limit=6291456,
-
 def make_container(env):
     command="python /home/sandbox/worker.py %s "
-    return dC.containers.create( BASE_IMAGE, environment=env ,command=command,  labels={'worker':env['LANG'] })
+    return dC.containers.create( BASE_IMAGE+'/'+env['LANG']+'_tester:latest', environment=env ,command=command,  labels={'worker':env['LANG'] })
 
 
 def start(cont):
-#   dC.start(cont['Id'], port_bindings={"6666/tcp": [{'HostIp': '', 'HostPort': ''}]})
     dC.start(cont['Id'])
 
 
@@ -74,30 +68,26 @@ def get_containers(label='worker', all=False):
 if __name__ == "__main__":
     kill_all()
     remove_all()
-    colas = [Cola(name)for name in LANGS]
-    for cola in colas:
-        print "Init Queue:", cola.app_name
-        print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
-        print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
-        print {'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']}
+    colas = [(Cola(language),number) for language, number in workers]
 
+    for (cola, number)  in colas:
+        print "Init Queue:", cola.app_name
+        for i in range(number):
+            print create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
+            print {'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']}
         time.sleep(4)
     while True:
         time.sleep(1)
         containers = get_containers()
         workers = [ w.split(':worker:') for w in Cola.get_all_workers()]
-        print workers
-        print containers
         for container in containers:
-
-
-            if container.id not in [w_id for w_lang, w_id  in workers]:
-                print "Killing: ", container.id
+            if container.short_id not in [w_id for w_lang, w_id  in workers]:
+                print "Killing: ", container.short_id
                 print container.attrs
                 print container.attrs[u'Config']['Labels']
                 container.kill()
                 container.remove()
-                print "Removing: ", container.id
+                print "Removing: ", container.short_id
                 print create_worker({'LANG':container.labels['worker'], 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
                 time.sleep(4)
 
