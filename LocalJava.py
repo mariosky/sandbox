@@ -7,12 +7,13 @@ import time
 
 from redis_cola import Cola, Task
 
+
 server = Cola("java")
 
 
 test =r"""//CalculatorTest
-import static junit.Assert.assertEquals;
-import junit.Test;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 public class CalculatorTest {
   @Test
