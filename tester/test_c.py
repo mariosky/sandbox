@@ -38,7 +38,7 @@ def run_test(code, test):
 
         #COMPILE Test
         try:
-            out = subprocess.check_output(['javac','-cp','%s:/usr/share/java/junit.jar' % tmp_dir, os.path.join(tmp_dir, "%sTest.java" % java_class)], stderr=subprocess.STDOUT)
+            out = subprocess.check_output(['javac','-cp','%s:/usr/share/java/hamcrest-core.jar:/usr/share/java/junit.jar' % tmp_dir, os.path.join(tmp_dir, "%sTest.java" % java_class)], stderr=subprocess.STDOUT)
             result = (out,0)
         except subprocess.CalledProcessError , e:
             result = (json.dumps({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"}),e.returncode)
@@ -135,7 +135,3 @@ if __name__ == "__main__":
     }"""
 
     print run_test(code, test)
-
-
-
-
