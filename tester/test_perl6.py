@@ -99,6 +99,7 @@ def _error_result(out):
                     continue
                 stdout.append(l)
 
+
     return json.dumps({
         'successes': [],
         'failures': [e.attrib['message'] for e in  tree.findall(".//failure")],
@@ -178,7 +179,7 @@ if __name__ == "__main__":
 
     test = """
     # .... tests
-    is add(6,1),          9, 'Suma dos enteros';
+    is add(6,1),          7, 'Suma dos enteros';
     is add(6,-1),         2, 'Suma dos enteros error';
     """
 

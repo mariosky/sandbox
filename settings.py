@@ -2,7 +2,7 @@
 
 workers = [
     #("csharp",2),
-    #("python", 2),
+    ("perl6", 2),
     ("java", 1),
 ]
 

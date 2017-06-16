@@ -7,7 +7,7 @@ import subprocess
 import json
 import re
 
-def run_test(code, test, type=None):
+def run_test(code, test):
     try:
         java_class = test[2:test.index('\n')-len('Test')]
         code = unicode(code)
@@ -109,79 +109,33 @@ def process_error_as_json(output):
 
 
 
+if __name__ == "__main__":
+    test = r"""//CalculatorTest
+    import static org.junit.Assert.assertEquals;
+    import org.junit.Test;
+
+    public class CalculatorTest {
+      @Test
+      public void evaluatesExpression() {
+        System.out.println("Hello, World");
+        Calculator calculator = new Calculator();
+        int sum = calculator.evaluate("1+2+3");
+        assertEquals(6, sum);
+      }
+    }"""
+
+    code = r"""
+    public class Calculator {
+      public int evaluate(String expression) {
+        int sum = 0;
+        for (String summand: expression.split("\\+"))
+          sum += Integer.valueOf(summand);
+        return sum;
+      }
+    }"""
+
+    print run_test(code, test)
 
 
-test =r"""//CalculatorTest
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 
-public class CalculatorTest {
-  @Test
-  public void evaluatesExpression() {
-    System.out.println("Hello, World");
-    Calculator calculator = new Calculator();
-    int sum = calculator.evaluate("1+2+3");
-    assertEquals(6, sum);
-  }
-}"""
-
-
-code =r"""
-public class Calculator {
-  public int evaluate(String expression) {
-    int sum = 0;
-    for (String summand: expression.split("\\+"))
-      sum += Integer.valueOf(summand);
-    return sum;
-  }
-}"""
-
-
-output="""JUnit version 4.11
-.Hello, World
-E
-Time: 0.014
-There was 1 failure:
-1) evaluatesExpression(CalculatorTest)
-java.lang.AssertionError: expected:<6> but was:<-6>
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at CalculatorTest.evaluatesExpression(CalculatorTest.java:11)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
-	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)
-	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
-	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)
-	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)
-	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:309)
-	at org.junit.runners.Suite.runChild(Suite.java:127)
-	at org.junit.runners.Suite.runChild(Suite.java:26)
-	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)
-	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:309)
-	at org.junit.runner.JUnitCore.run(JUnitCore.java:160)
-	at org.junit.runner.JUnitCore.run(JUnitCore.java:138)
-	at org.junit.runner.JUnitCore.run(JUnitCore.java:117)
-	at org.junit.runner.JUnitCore.runMain(JUnitCore.java:96)
-	at org.junit.runner.JUnitCore.runMainAndExit(JUnitCore.java:47)
-	at org.junit.runner.JUnitCore.main(JUnitCore.java:40)
-
-FAILURES!!!
-Tests run: 1,  Failures: 1"""
 
