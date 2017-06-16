@@ -31,7 +31,7 @@ def run_test(code, test, type=None):
             out = subprocess.check_output(['nunit-console','-nologo', '-nodots','-output=out.txt',os.path.join(tmp_dir, "ProgramTest.dll")], stderr=subprocess.STDOUT)
             result = (_result(),0)
         except subprocess.CalledProcessError , e:
-            result =  (_result(), e.returncode)
+            result = ["Error, could not evaluate"], e
         finally:
             shutil.rmtree(tmp_dir)
 
