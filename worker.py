@@ -24,10 +24,12 @@ while True:
     t = worker.pull_task()
 
     if (t):
+        print t
         code = t.params['code']
         test = t.params['test']
         worker.send_heartbeat() #About to start working
         t.result = tester.run_test(code,test)
+        print t.result
         t.put_result(worker)
     else:
         pass

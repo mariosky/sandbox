@@ -19,92 +19,53 @@ def run_test(code, test):
         result = [],""
         out = None
         try:
-            out = subprocess.check_output(['prove', '--QUIET', '--exec', 'perl6', '--formatter', 'TAP::Formatter::JUnit', script_path], stderr=subprocess.STDOUT)
+            out = subprocess.check_output(['prove','-v', '--exec', 'perl6', script_path], stderr=subprocess.STDOUT)
             result = (_success_result(out), 0)
         except subprocess.CalledProcessError, e:
-            result = (_error_result(e.output), 0)
+            result = (_error_result(e.output), e.returncode)
 
         finally:
             shutil.rmtree(tmp_dir)
 
-
         return result
     except Exception, e:
-        return json.dumps({
+        return (json.dumps({
             'successes': [],
             'failures': [],
             'errors': [],
             'stdout': e.message,
             'result': 'ProcessError'
-        })
+        }),1)
 
 
 def _error_result(out):
-    xml_JUNit = []
-    compile_error = False
-    errors = []
-    for l in out.split('\n'):
-        if len(l) > 0:
-            if l.startswith('#'):
-                continue
-            if l.startswith('perl:'):
-                continue
-            if 'SORRY!' in l:
-                compile_error = True
-                errors.append("Error while compiling")
-                continue
-            if compile_error:
-                errors.append(l)
-                continue
-
-            xml_JUNit.append(l)
-        #Return Compile Error
-        if len(l) == 0 and compile_error:
-            r = {
-                'successes': [],
-                'failures': [],
-                'errors': errors,
-                'stdout': '\n'.join(errors),
-                'result': []}
-            return json.dumps(r)
-
-    doc = '\n'.join(xml_JUNit)
-    try:
-        tree = ET.fromstring(doc)
-    except ET.ParseError, e:
-
-    # Process error
-        return json.dumps({
-                'successes': [],
-                'failures': [],
-                'errors': [],
-                'stdout': out,
-                'result': 'ProcessError'
-            })
-
-    #Return Unit test Error
-    system_out = [e.text for e in tree.findall(".//system-out")]
+    # La salida de STDOUT estara primero
+    # Extraerla y agregarla al json out
     successes = []
     failures = []
     stdout = []
+    N = 0  # Number of tests
 
-    if system_out:
-        for l in system_out[0].split('\n'):
-            if len(l) > 0:
-                if l.startswith('not ok'):
-                    failures.append(l)
-                    continue
-                if l.startswith('ok'):
-                    successes.append(l)
-                    continue
-                stdout.append(l)
+    for l in out.split('\n'):
+        if len(l) > 0:
+            if l.startswith('#') or l.startswith('Dubious, test') :
+                continue
+            if l.startswith('ok'):
+                successes.append(l[3:])
+                continue
+            if l.startswith('not ok'):
+                failures.append(l[7:])
+                continue
+            if l.startswith('1..'):
+                break
+            stdout.append(l)
 
 
     return json.dumps({
-        'successes': [],
-        'failures': [e.attrib['message'] for e in  tree.findall(".//failure")],
+        'successes': successes,
+        'failures': failures,
         'errors': [],
-        'stdout': '\n'.join(stdout) ,
+        'stdout': stdout,
         'result': 'Failure'
     })
 
@@ -115,49 +76,39 @@ def _error_result(out):
 
 
 
+
 def _success_result(out):
-    xml_JUNit = []
-    ## Clean ouput
+    successes = []
+    failures = []
+    stdout = []
+    N = 0 #Number of tests
+
     for l in out.split('\n'):
         if len(l) > 0:
             if l.startswith('#'):
                 continue
-            if l.startswith('perl:'):
+            if l.startswith('ok'):
+                successes.append(l[3:])
                 continue
-
-            xml_JUNit.append(l)
-
-
-    doc = '\n'.join(xml_JUNit)
-    tree = ET.fromstring(doc)
-
-    system_out = [e.text for e in tree.findall(".//system-out")]
-    successes =[]
-    failures =[]
-    stdout = []
-
-    if system_out:
-        for l in system_out[0].split('\n'):
-            if len(l) > 0:
-                if l.startswith('not ok'):
-                    failures.append(l)
-                    continue
-                if l.startswith('ok'):
-                    successes.append(l)
-                    continue
-                stdout.append(l)
+            if l.startswith('not ok'):
+                failures.append(l[7:])
+                continue
+            if l.startswith('1..'):
+                N = int(l[3:])
+                break
+            stdout.append(l)
 
 
-
-    r = {
+    return json.dumps({
         'successes': successes,
-        'failures': [],
+        'failures': failures,
         'errors': [],
-        'stdout': '\n'.join(stdout)   ,
-        'result': 'Success'
-    }
+        'stdout': stdout,
+        'result':'Success'
+    })
 
-    return json.dumps(r)
+
+
 
 test_begin = u"""
 use v6.c;
@@ -180,7 +131,7 @@ if __name__ == "__main__":
     test = """
     # .... tests
     is add(6,1),          7, 'Suma dos enteros';
-    is add(6,-1),         2, 'Suma dos enteros error';
+    is add(6,1),          5, 'Suma dos enteros error';
     """
 
     print run_test(code, test)
