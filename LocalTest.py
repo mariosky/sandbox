@@ -6,36 +6,25 @@ import os
 import time
 
 print os.environ['REDIS_HOST']
-print os.environ['LANG']
+
 
 from redis_cola import Cola, Task
 
 server = Cola("python")
 
-code = """def producto(l1,l2):
-    return 11"""
+code = """
+def suma(a,b):
+    return a+b
+"""
 
 
 
-test= u"""import sys
-import unittest
-import json
-
-class ResultadoPrueba(unittest.TestResult):
-    def __init__(self):
-         super(ResultadoPrueba, self).__init__()
-         self.success = []
-    def addSuccess(self, test):
-         self.success.append(test)
-    def shouldStop(self, test):
-         return False
-
-
+test= u"""
 class Test(unittest.TestCase):
     def setUp(self):
         pass
     def test_Action(self):
-        self.assertEqual(producto([2, 1, 3], [2, 3, 1]), 10)"""
+        self.assertEqual(add( 1, 3)), 4)"""
 
 
 
