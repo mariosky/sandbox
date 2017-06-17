@@ -39,7 +39,7 @@ class ImageException(Exception):
 
 def make_container(env):
     command="python /home/sandbox/worker.py %s "
-    return dC.containers.create( BASE_IMAGE+'/sandbox-test-'+env['LANG']+':latest', environment=env ,command=command,  labels={'worker':env['LANG'] })
+    return dC.containers.create( BASE_IMAGE+'/sandbox-test-'+env['PL']+':latest', environment=env ,command=command,  labels={'worker':env['PL'] })
 
 
 def kill_all():
@@ -67,8 +67,8 @@ if __name__ == "__main__":
     for (cola, number)  in colas:
         print "Init Queue:", cola.app_name
         for i in range(number):
-            create_worker({'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
-            print {'LANG':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']}
+            create_worker({'PL':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
+            print {'PL':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']}
         time.sleep(4)
     while True:
         time.sleep(1)
@@ -86,7 +86,7 @@ if __name__ == "__main__":
                 container.kill()
                 container.remove()
                 print "Removing: ", container.short_id
-                print create_worker({'LANG':container.labels['worker'], 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
+                print create_worker({'PL':container.labels['worker'], 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
                 time.sleep(4)
 
 

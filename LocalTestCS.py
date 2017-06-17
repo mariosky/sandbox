@@ -6,7 +6,7 @@ import os
 import time
 
 print os.environ['REDIS_HOST']
-print os.environ['LANG']
+
 
 from redis_cola import Cola, Task
 

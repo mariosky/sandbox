@@ -3,7 +3,7 @@ import importlib
 
 from redis_cola import Cola, Worker
 
-lang = os.environ['LANG']
+lang = os.environ['PL']
 server = Cola(lang)
 
 print lang
