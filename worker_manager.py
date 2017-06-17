@@ -39,7 +39,7 @@ class ImageException(Exception):
 
 def make_container(env):
     command="python /home/sandbox/worker.py %s "
-    return dC.containers.create( BASE_IMAGE+'/'+env['LANG']+'_tester:latest', environment=env ,command=command,  labels={'worker':env['LANG'] })
+    return dC.containers.create( BASE_IMAGE+'/sandbox-test-'+env['LANG']+':latest', environment=env ,command=command,  labels={'worker':env['LANG'] })
 
 
 def kill_all():
