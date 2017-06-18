@@ -21,7 +21,7 @@ public class CalculatorTest {
     System.out.println("Hello, World");
     Calculator calculator = new Calculator();
     int sum = calculator.evaluate("1+2+3");
-    assertEquals(6, sum);
+    assertEquals(5, sum);
   }
 }"""
 
