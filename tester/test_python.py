@@ -103,7 +103,6 @@ if __name__ == "__main__":
 def suma(a,b):
     print a,b
     return a+b
-
     """
 
     test = '''

@@ -15,9 +15,9 @@ dC = docker.DockerClient(base_url='unix://var/run/docker.sock', version="auto", 
 
 
 
-def create_worker(env ):
+def create_worker(env, language ):
     # TODO catch ContainerError - requests.exceptions.ConnectionError
-    container = make_container(env)
+    container = make_container(env, language)
     container.start()
     return container
 
@@ -37,9 +37,8 @@ class ImageException(Exception):
     pass
 
 
-def make_container(env):
-    command="python /home/sandbox/worker.py %s "
-    return dC.containers.create( BASE_IMAGE+'/sandbox-test-'+env['PL']+':latest', environment=env ,command=command,  labels={'worker':env['PL'] })
+def make_container(env, language):
+    return dC.containers.create(settings[language]["image"], environment=env ,command = settings[language]["command"],  labels= {'worker': language })
 
 
 def kill_all():
@@ -62,13 +61,13 @@ def get_containers(label='worker', all=False):
 if __name__ == "__main__":
     kill_all()
     remove_all()
-    colas = [(Cola(language),number) for language, number in workers]
+    colas = [(Cola(language),settings[language]["containers"]) for language  in settings.keys()]
 
     for (cola, number)  in colas:
         print "Init Queue:", cola.app_name
         for i in range(number):
-            create_worker({'PL':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
-            print {'PL':cola.app_name, 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']}
+            create_worker({'PL':cola.app_name,'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']}, language=cola.app_name)
+            print cola.app_name, {'PL':cola.app_name,'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']}
         time.sleep(4)
     while True:
         time.sleep(1)
@@ -86,7 +85,7 @@ if __name__ == "__main__":
                 container.kill()
                 container.remove()
                 print "Removing: ", container.short_id
-                print create_worker({'PL':container.labels['worker'], 'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
+                print create_worker({'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']})
                 time.sleep(4)
 
 

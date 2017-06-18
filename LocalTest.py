@@ -12,16 +12,18 @@ server = Cola("python")
 
 code = """
 def suma(a,b):
+    print a,b
     return a+b
-"""
+    """
 
-test= u"""
-class Test(unittest.TestCase):
-    def setUp(self):
-        pass
+test = '''
+class TestExcercise(unittest.TestCase):
     def test_Action(self):
-        self.assertEqual(add( 1, 3)), 4)"""
-
+        """Debes sumar mal"""
+        self.assertEqual(suma( 1, 3), 4)
+    def test_Action2(self):
+        """Debes sumar bien"""
+        self.assertEqual(suma( 1, 3), 4)'''
 
 def put():
     task = {"id": None, "method": "exec", "params": {"code": code, "test": test}}
