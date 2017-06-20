@@ -72,16 +72,11 @@ if __name__ == "__main__":
     while True:
         time.sleep(1)
         containers = get_containers()
-        print containers
-
         workers = [ w.split(':worker:') for w in Cola.get_all_workers()]
 
-        print workers
         for container in containers:
             if container.short_id not in [w_id for w_lang, w_id  in workers]:
                 print "Killing: ", container.short_id
-                print container.attrs
-                print container.attrs[u'Config']['Labels']
                 container.kill()
                 container.remove()
                 print "Removing: ", container.short_id
