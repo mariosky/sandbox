@@ -92,7 +92,7 @@ from tap import TAPTestRunner
 
 test_end = u"""
 if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestProg)
+    suite = unittest.TestLoader().loadTestsFromTestCase(Test)
     runner = TAPTestRunner()
     runner.set_stream(True)
     runner.run(suite)
@@ -106,7 +106,7 @@ def suma(a,b):
     """
 
     test = '''
-class TestProg(unittest.TestCase):
+class Test(unittest.TestCase):
     def test_Action(self):
         """Debes sumar mal"""
         self.assertEqual(suma( 1, 3), 4)
