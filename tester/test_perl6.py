@@ -58,7 +58,7 @@ def _error_result(out):
                 continue
             if l.startswith('1..'):
                 break
-            stdout.append(l)
+            failures.append(l)
 
 
     return json.dumps({
@@ -122,16 +122,18 @@ done-testing;
 
 if __name__ == "__main__":
     code = """
-    sub add($a, $b) {
+    sub is_leap_year($a) {
         say "Hi";
-        return $a+$b;
+        return $a;
     }
     """
 
-    test = """
+    test = u"""
     # .... tests
-    is add(6,1),          7, 'Suma dos enteros';
-    is add(6,1),          5, 'Suma dos enteros error';
+    is is_leap_year(2015),          True, 'Año no divisible entre 4';
+    is is_leap_year(2016),          False, 'Año divisible entre 4, no entre 100';
+    is is_leap_year(2100),          True, 'Año divisible entre 100 no entre 400';
+    is is_leap_year(2000),          False, 'Año divisible entre 400';
     """
 
     print run_test(code, test)
