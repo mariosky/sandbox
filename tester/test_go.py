@@ -1,117 +1,135 @@
 # -*- coding: utf-8 -*-
-# Based on: http://readevalprint.github.com/blog/python-sandbox-with-pypy-part2.html
-
-
-import shutil, os, tempfile
-import subprocess,json, re
-
+import shutil
+import os
+import tempfile
+import subprocess
+import json
+import re
 
 def run_test(code, test):
     try:
-
-        code = """# -*- coding: utf-8 -*-\n""" +  code + test_begin + test +test_end
         code = unicode(code)
-        tmp_dir = tempfile.mkdtemp()
-        tmp_script = open(os.path.join(tmp_dir, "script.py"),'w')
-        tmp_script.write(code.encode('utf8'))
-        tmp_script.close()
-        script_path = os.path.join(tmp_dir, "script.py")
-        result = [],""
+        test = unicode(test)
+
+
+
+        tmp_dir = tempfile.mkdtemp(prefix="/Users/mariosky/go/src/")
+        print tmp_dir
+        program_name = tmp_dir.split('/')[-1]
+
+        tmp_program = open(os.path.join(tmp_dir, "%s.go" % program_name ),'w')
+        tmp_program.write(code.encode('utf8'))
+        tmp_program.close()
+        result = [],0
+
+
+        tmp_test = open(os.path.join(tmp_dir, "%s_test.go" % program_name ),'w')
+        tmp_test.write(test.encode('utf8'))
+        tmp_test.close()
+
+
+
+        #COMPILE Program
         try:
-            out = subprocess.check_output(['python',script_path], stderr=subprocess.STDOUT)
-            result = (process_out_as_json(out),0)
-
-
+            out = subprocess.check_output(['go','install',program_name], stderr=subprocess.STDOUT)
+            print out
+            result = (out,0)
         except subprocess.CalledProcessError , e:
-            print 'e.output:', e.output
-            result = process_error_as_json(e.output), e.returncode
+            result = (json.dumps({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"}),e.returncode)
+            return result
 
+        #TEST
+        try:
+            out = subprocess.check_output(['go','test', program_name], stderr=subprocess.STDOUT)
+            print result
+            result = (process_out_as_json(out),0)
+        except subprocess.CalledProcessError , e:
+            print e.output
+            result = process_error_as_json(e.output), e.returncode
         finally:
             shutil.rmtree(tmp_dir)
         return result
     except Exception, e:
-        return (json.dumps({
-            'successes':[],
-            'failures': [],
-            'errors': [],
-            'stdout': e.message,
-            'result': 'ProcessError'
-        }) , 1)
+         return ["Error, could not evaluate"], e
+
 
 def process_out_as_json(output):
     # La salida de STDOUT estara primero
     # Extraerla y agregarla al json out
-    successes = []
-    failures = []
     stdout = []
-    N = 0 #Number of tests
+    res = []
+    if output:
+        for l in output.split('\n'):
+            if len(l) >0:
+                if  l.startswith('JUnit'):
+                    res.append(l)
+                    continue
+                if l.startswith('.'):
+                    no_dots = re.sub(r'^\.*', '', l)
+                    stdout.append(no_dots)
+                    continue
+                if l.startswith('Time') or l.startswith('OK'):
+                    stdout.append(l)
+                    continue
+                stdout.append(l)
+    result = {}
+    result['result'] = "Success"
+    result['errors']=  res
+    result['failures']=  []
+    result['successes']=  []
+    result['stdout']=  stdout
+    return json.dumps(result)
 
-    for l in output.split('\n'):
-        if len(l) > 0:
-            if l.startswith('#'):
-                continue
-            if l.startswith('ok'):
-                successes.append(l[3:])
-                continue
-            if l.startswith('not ok'):
-                failures.append(l[7:])
-                continue
-            if l.startswith('1..'):
-                N = int(l[3:])
-                continue
-            stdout.append(l)
-
-
-    result = failures and 'Failure' or 'Success'
-
-
-    return json.dumps({
-        'successes': successes,
-        'failures': failures,
-        'errors': [],
-        'stdout': stdout,
-        'result':result
-    })
 
 def process_error_as_json(output):
-    return json.dumps({
-        'successes': [],
-        'failures': [],
-        'errors': [],
-        'stdout': output,
-        'result': 'ProcessError'
-    })
+    res = []
+    if output:
+        for l in output.split('\n'):
+            if len(l) >0 and not l.startswith('\t'):
+                if  l.startswith('JUnit'):
+                    res.append(l)
+                    continue
+
+                if l.startswith('.'):
+                    no_dots = re.sub(r'^\.*', '', l)
+                    res.append(no_dots)
+                    continue
+                res.append(l)
+    result = {}
+    result['result'] = "ProcessError"
+    result['errors']=  res
+    result['failures']=  []
+    result['successes']=  []
+    return json.dumps(result)
 
 
-
-
-test_begin = u"""
-import unittest
-from tap import TAPTestRunner
-"""
-
-test_end = u"""
-if __name__ == '__main__':
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestExcercise)
-    runner = TAPTestRunner()
-    runner.set_stream(True)
-    runner.run(suite)
-"""
 
 if __name__ == "__main__":
-    code = """
-def suma(a,b):
-    print a,b
-    return a+b
+    code= r"""
+    package math
+
+    func Average(xs []float64) float64 {
+      total := float64(0)
+      for _, x := range xs {
+        total += x
+      }
+      return total / float64(len(xs))
+    }
     """
 
-    test = '''
-class TestExcercise(unittest.TestCase):
-    def test_Action(self):
-        """Debes sumar mal"""
-        self.assertEqual(suma( 1, 3), 4)
-    def test_Action2(self):
-        """Debes sumar bien"""
-        self.assertEqual(suma( 1, 3), 4)'''
+    test = r"""
+    package math
+
+    import "testing"
+
+    func TestAverage(t *testing.T) {
+      var v float64
+      v = Average([]float64{1,2})
+      if v != 1.3 {
+        t.Error("Expected 1.5, got ", v)
+      }
+    }
+"""
+
     print run_test(code, test)
 
