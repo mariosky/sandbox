@@ -32,7 +32,6 @@ def run_test(code, test):
         #COMPILE Program
         try:
             out = subprocess.check_output(['go','install',program_name], stderr=subprocess.STDOUT)
-            print out
             result = (out,0)
         except subprocess.CalledProcessError , e:
             result = (json.dumps({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"}),e.returncode)
@@ -41,10 +40,9 @@ def run_test(code, test):
         #TEST
         try:
             out = subprocess.check_output(['go','test', program_name], stderr=subprocess.STDOUT)
-            print result
             result = (process_out_as_json(out),0)
         except subprocess.CalledProcessError , e:
-            print e.output
+
             result = process_error_as_json(e.output), e.returncode
         finally:
             shutil.rmtree(tmp_dir)
@@ -82,25 +80,33 @@ def process_out_as_json(output):
 
 
 def process_error_as_json(output):
-    res = []
+    failures = []
+    stdout = []
+    result = "ProcessError"
     if output:
+        second_line = False
         for l in output.split('\n'):
-            if len(l) >0 and not l.startswith('\t'):
-                if  l.startswith('JUnit'):
-                    res.append(l)
-                    continue
+            if len(l) > 0 and l.startswith('--- FAIL') or second_line:
+                if not second_line:
+                    failures.append(l)
+                    second_line = True
+                else:
+                    failures.append(l)
+                    second_line = False
+                continue
 
-                if l.startswith('.'):
-                    no_dots = re.sub(r'^\.*', '', l)
-                    res.append(no_dots)
-                    continue
-                res.append(l)
-    result = {}
-    result['result'] = "ProcessError"
-    result['errors']=  res
-    result['failures']=  []
-    result['successes']=  []
-    return json.dumps(result)
+            if l.startswith('FAIL'):
+                stdout.append(l)
+                result = "Fail"
+                break
+
+    return json.dumps({
+        'successes': [],
+        'failures': failures,
+        'errors': [],
+        'stdout': stdout,
+        'result': result
+    })
 
 
 
@@ -119,16 +125,26 @@ if __name__ == "__main__":
 
     test = r"""
     package math
+    
 
     import "testing"
 
     func TestAverage(t *testing.T) {
       var v float64
       v = Average([]float64{1,2})
-      if v != 1.3 {
+      if v != 1.5 {
         t.Error("Expected 1.5, got ", v)
       }
     }
+    
+    func TestAverage2(t *testing.T) {
+      var v float64
+      v = Average([]float64{1,5})
+      if v != 3 {
+        t.Error("Expected 3, got ", v)
+      }
+    }
+    
 """
 
     print run_test(code, test)
