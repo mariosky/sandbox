@@ -13,7 +13,7 @@ def run_test(code, test):
 
 
 
-        tmp_dir = tempfile.mkdtemp(prefix="/Users/mariosky/go/src/")
+        tmp_dir = tempfile.mkdtemp(prefix="/go/src/")
         print tmp_dir
         program_name = tmp_dir.split('/')[-1]
 

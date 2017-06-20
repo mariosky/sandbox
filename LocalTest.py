@@ -71,4 +71,47 @@ print get(tid,'perl6')
 
 
 
+server = Cola("go")
+
+code = r"""
+    package math
+
+    func Average(xs []float64) float64 {
+      total := float64(0)
+      for _, x := range xs {
+        total += x
+      }
+      return total / float64(len(xs))
+    }
+    """
+
+test = r"""
+    package math
+
+
+    import "testing"
+
+    func TestAverage(t *testing.T) {
+      var v float64
+      v = Average([]float64{1,2})
+      if v != 1.5 {
+        t.Error("Expected 1.5, got ", v)
+      }
+    }
+
+    func TestAverage2(t *testing.T) {
+      var v float64
+      v = Average([]float64{1,5})
+      if v != 3 {
+        t.Error("Expected 3, got ", v)
+      }
+    }
+
+"""
+
+tid = put()
+print tid
+time.sleep(6)
+print get(tid,'go')
+
 
