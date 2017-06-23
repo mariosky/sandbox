@@ -70,7 +70,8 @@ if __name__ == "__main__":
             print cola.app_name, {'PL':cola.app_name,'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']}
         time.sleep(4)
     while True:
-        time.sleep(1)
+        ## Time between checks
+        time.sleep(2)
         containers = get_containers()
         workers = [ w.split(':worker:') for w in Cola.get_all_workers()]
 
