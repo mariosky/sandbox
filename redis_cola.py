@@ -125,7 +125,7 @@ class Worker:
         else:
             return None
 
-    def send_heartbeat(self, timeout = WORKER_HEARTBEAT_INTERVAL + 10):
+    def send_heartbeat(self, timeout = WORKER_HEARTBEAT_INTERVAL + 20):
         pipe = r.pipeline()
         pipe.set(self.id, 1)
         pipe.expire(self.id, timeout)
