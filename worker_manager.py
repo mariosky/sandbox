@@ -81,7 +81,7 @@ if __name__ == "__main__":
                 container.kill()
                 container.remove()
                 print "Removing: ", container.short_id
-                print create_worker({'PL':cola.app_name,'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']}, language=cola.app_name)
+                print create_worker({'PL': container.labels['worker'],'REDIS_HOST':os.environ['REDIS_HOST'], 'REDIS_PORT':os.environ['REDIS_PORT']}, language=container.labels['worker'])
                 time.sleep(4)
 
 
