@@ -9,20 +9,18 @@ import re
 
 def run_test(code, test):
     try:
-
+        java_class = test[2:test.index('\n') - len('Test')]
         code = unicode(code)
         test = unicode(test)
 
 
         tmp_dir = tempfile.mkdtemp()
-        print tmp_dir
-        tmp_program = open(os.path.join(tmp_dir, "test.java" ),'w')
+        tmp_program = open(os.path.join(tmp_dir, "%s.java" % java_class), 'w')
         tmp_program.write(code.encode('utf8'))
         tmp_program.close()
         result = [],0
 
-
-        tmp_test = open(os.path.join(tmp_dir, "test.java"  ),'w')
+        tmp_test = open(os.path.join(tmp_dir, "%sTest.java" % java_class), 'w')
         tmp_test.write(test.encode('utf8'))
         tmp_test.close()
 
@@ -106,7 +104,7 @@ def process_error_as_json(output):
                     no_dots = re.sub(r'^\.*', '', l)
                     res.append(no_dots)
                     continue
-
+                stdout.append(l)
                 res.append(l)
     result = {}
     result['result'] = "ProcessError"
