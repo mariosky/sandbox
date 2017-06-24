@@ -88,6 +88,8 @@ def process_out_as_json(output):
 
 def process_error_as_json(output):
     res = []
+    stdout = []
+
     if output:
         for l in output.split('\n'):
             if len(l) >0 and not l.startswith('\t'):
@@ -111,6 +113,7 @@ def process_error_as_json(output):
     result['errors']=  res
     result['failures']=  []
     result['successes']=  []
+    result['stdout'] = stdout
     return json.dumps(result)
 
 
