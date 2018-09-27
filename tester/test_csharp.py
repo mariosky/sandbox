@@ -10,30 +10,29 @@ def run_test(code, test):
     try:
         code = """using NUnit.Framework;
         """ + code + test
-        code = str(code)
         tmp_dir = tempfile.mkdtemp()
         tmp_script = open(os.path.join(tmp_dir, "ProgramTest.cs"),'w')
-        tmp_script.write(code.encode('utf8'))
+        print(tmp_script.write(code))
         tmp_script.close()
         result = [],0
 
         #COMPILE
         try:
             out = subprocess.check_output(['mcs',os.path.join(tmp_dir, "ProgramTest.cs"),  '-r:/home/nunit.framework.dll',  '-target:library'], stderr=subprocess.STDOUT)
-            print(out)
+            print("out:",out)
             result = (out,0)
         except subprocess.CalledProcessError as e:
-            print(e)
-            result = (json.dumps({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"}),e.returncode)
+            print("out Exception:",e)
+            result = (json.dumps({ 'successes':[],'failures':[], 'errors': e.output.decode('utf8').split('\n'), 'stdout': "", 'result': "Failure"}),e.returncode)
             return result
 
         #TEST
         try:
             out = subprocess.check_output(['nunit-console','-nologo', '-nodots','-output=out.txt',os.path.join(tmp_dir, "ProgramTest.dll")], stderr=subprocess.STDOUT)
-            print(out)
+            print("out TEST:",out)
             result = (_result(),0)
         except subprocess.CalledProcessError as e:
-            result = ["Error, could not evaluate"], e
+            result = ["Error, could not test"], e
         finally:
             shutil.rmtree(tmp_dir)
 
