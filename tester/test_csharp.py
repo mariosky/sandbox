@@ -10,7 +10,7 @@ def run_test(code, test):
     try:
         code = """using NUnit.Framework;
         """ + code + test
-        code = unicode(code)
+        code = str(code)
         tmp_dir = tempfile.mkdtemp()
         tmp_script = open(os.path.join(tmp_dir, "ProgramTest.cs"),'w')
         tmp_script.write(code.encode('utf8'))
@@ -20,25 +20,25 @@ def run_test(code, test):
         #COMPILE
         try:
             out = subprocess.check_output(['mcs',os.path.join(tmp_dir, "ProgramTest.cs"),  '-r:/home/nunit.framework.dll',  '-target:library'], stderr=subprocess.STDOUT)
-            print out
+            print(out)
             result = (out,0)
-        except subprocess.CalledProcessError , e:
-            print e
+        except subprocess.CalledProcessError as e:
+            print(e)
             result = (json.dumps({ 'successes':[],'failures':[], 'errors': e.output.split('\n'), 'stdout': "", 'result': "Failure"}),e.returncode)
             return result
 
         #TEST
         try:
             out = subprocess.check_output(['nunit-console','-nologo', '-nodots','-output=out.txt',os.path.join(tmp_dir, "ProgramTest.dll")], stderr=subprocess.STDOUT)
-            print out
+            print(out)
             result = (_result(),0)
-        except subprocess.CalledProcessError , e:
+        except subprocess.CalledProcessError as e:
             result = ["Error, could not evaluate"], e
         finally:
             shutil.rmtree(tmp_dir)
 
         return result
-    except Exception, e:
+    except Exception as e:
         return ["Error, could not evaluate"], e
 
 
@@ -58,7 +58,7 @@ def _result():
 
 if __name__ == "__main__":
 
-    code = u"""using System.IO;
+    code = """using System.IO;
     using System;
     public class Product
     {
@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
 
 
-    test= u"""[TestFixture]
+    test= """[TestFixture]
     public class ProductTest
     {
     
@@ -115,4 +115,4 @@ if __name__ == "__main__":
         }
     }"""
 
-    print run_test(code,test)
+    print((run_test(code,test)))
