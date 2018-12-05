@@ -10,10 +10,9 @@ def run_test(code, test):
     try:
 
         code = """# -*- coding: utf-8 -*-\n""" +  code + test_begin + test +test_end
-        code = unicode(code)
         tmp_dir = tempfile.mkdtemp()
         tmp_script = open(os.path.join(tmp_dir, "script.py"),'w')
-        tmp_script.write(code.encode('utf8'))
+        tmp_script.write(code)
         tmp_script.close()
         script_path = os.path.join(tmp_dir, "script.py")
         result = [],""
@@ -22,19 +21,19 @@ def run_test(code, test):
             result = (process_out_as_json(out),0)
 
 
-        except subprocess.CalledProcessError , e:
-            print 'e.output:', e.output
+        except subprocess.CalledProcessError as e:
+            print ('e.output:', e.output)
             result = process_error_as_json(e.output), e.returncode
 
         finally:
             shutil.rmtree(tmp_dir)
         return result
-    except Exception, e:
+    except Exception as e:
         return (json.dumps({
             'successes':[],
             'failures': [],
             'errors': [],
-            'stdout': e.message,
+            'stdout': str(e),
             'result': 'ProcessError'
         }) , 1)
 
@@ -113,5 +112,5 @@ class Test(unittest.TestCase):
     def test_Action2(self):
         """Debes sumar bien"""
         self.assertEqual(suma( 1, 3), 4)'''
-    print run_test(code, test)
+    print (run_test(code, test))
 
