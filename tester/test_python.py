@@ -14,16 +14,16 @@ def run_test(code, test):
         tmp_script = open(os.path.join(tmp_dir, "script.py"),'w')
         tmp_script.write(code)
         tmp_script.close()
+
         script_path = os.path.join(tmp_dir, "script.py")
         result = [],""
         try:
             out = subprocess.check_output(['python',script_path], stderr=subprocess.STDOUT)
-            result = (process_out_as_json(out),0)
+            result = (process_out_as_json(out.decode('utf-8')),0)
 
 
         except subprocess.CalledProcessError as e:
-            print ('e.output:', e.output)
-            result = process_error_as_json(e.output), e.returncode
+            result = process_error_as_json(e.output.decode('utf-8')), e.returncode
 
         finally:
             shutil.rmtree(tmp_dir)
@@ -33,7 +33,7 @@ def run_test(code, test):
             'successes':[],
             'failures': [],
             'errors': [],
-            'stdout': str(e),
+            'stdout': 'outer:'+str(e),
             'result': 'ProcessError'
         }) , 1)
 
@@ -100,7 +100,7 @@ if __name__ == '__main__':
 if __name__ == "__main__":
     code = """
 def suma(a,b):
-    print a,b
+    print (a,b)
     return a+b
     """
 
