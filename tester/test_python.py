@@ -18,7 +18,7 @@ def run_test(code, test):
         script_path = os.path.join(tmp_dir, "script.py")
         result = [],""
         try:
-            out = subprocess.check_output(['python',script_path], stderr=subprocess.STDOUT)
+            out = subprocess.check_output(['python3',script_path], stderr=subprocess.STDOUT)
             result = (process_out_as_json(out.decode('utf-8')),0)
 
 
@@ -112,5 +112,6 @@ class Test(unittest.TestCase):
     def test_Action2(self):
         """Debes sumar bien"""
         self.assertEqual(suma( 1, 3), 4)'''
+
     print (run_test(code, test))
 
