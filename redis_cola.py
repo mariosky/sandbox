@@ -1,6 +1,7 @@
 __author__ = 'mariosky'
 import redis
 import os
+import json
 
 HOST = os.environ['REDIS_HOST']
 PORT = os.environ['REDIS_PORT']
@@ -25,7 +26,8 @@ class Task:
         pipe = r.pipeline()
         if pipe.rpush('%s:task_queue' % app_name, self.id):
             self.state = 'submitted'
-            pipe.set(self.id, self.__dict__)
+            message = json.dumps(self.__dict__)
+            pipe.set(self.id, message)
             pipe.execute()
             return True
         else:
@@ -35,7 +37,8 @@ class Task:
         pipe = r.pipeline()
         if pipe.zrem('%s:pending_set' % worker.cola.app_name, '%s:%s' % (worker.id, self.id)):
             self.state = 'completed'
-            pipe.set(self.id, self.__dict__)
+            message = json.dumps(self.__dict__)
+            pipe.set(self.id, message)
             pipe.sadd('%s:result_set' % worker.cola.app_name, self.id)
             pipe.execute()
             return True
@@ -45,6 +48,7 @@ class Task:
     def get_result(self, app_name, as_dict = False):
         if r.sismember('%s:result_set' % app_name, self.id):
             _dict = eval(r.get(self.id))
+
             self.__dict__.update(_dict)
             if as_dict:
                 return self.__dict__
@@ -120,6 +124,7 @@ class Worker:
             # zadd NOTE: The order of arguments differs from that of the official ZADD command.
             r.zadd(self.cola.pending_set,  '%s:%s' % (self.id, task[1]), time_stamp)
             # Return a Task object
+            _task = json.loads(_task)
             return Task(**eval(_task))
         #If there is no task to do return None
         else:
