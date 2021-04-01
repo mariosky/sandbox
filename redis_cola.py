@@ -2,6 +2,7 @@ __author__ = 'mariosky'
 import redis
 import os
 import json
+import time
 
 HOST = os.environ['REDIS_HOST']
 PORT = os.environ['REDIS_PORT']
@@ -9,8 +10,18 @@ PORT = os.environ['REDIS_PORT']
 WORKER_HEARTBEAT_INTERVAL = 1  #Time a worker waits for a Task before unblocking to send a heartbeat
 
 #TODO: Connection Exception
-r = redis.Redis(host=HOST, port=PORT)
 
+
+r = redis.Redis(host=HOST, port=PORT)
+redis_ready = False
+while not redis_ready:
+    try:
+        redis_ready = r.ping()
+    except:
+        print("waiting for redis")
+        time.sleep(3)
+
+print("redis alive")
 
 class Task:
     def __init__(self, **kwargs):
