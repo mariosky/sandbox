@@ -128,15 +128,17 @@ class Worker:
         task = r.blpop(self.cola.task_queue, time_out)
         if task:
             #Get Task Details
-            _task = r.get(task[1])
+            _task = r.get()
             #Get Time_stamp
+            print(_task, task[1])
             time_stamp =r.time()[0]
+
             #Store task in pending_set ordered by time
             # zadd NOTE: The order of arguments differs from that of the official ZADD command.
             r.zadd(self.cola.pending_set,  '%s:%s' % (self.id, task[1]), time_stamp)
             # Return a Task object
-            _task = json.loads(_task)
-            print(_task)
+
+            
             return Task(**eval(_task))
         #If there is no task to do return None
         else:
